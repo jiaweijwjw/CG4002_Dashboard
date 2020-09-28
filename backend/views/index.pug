@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #[em CG4002 Dashboard B14], our group's real-time dashboard.
+
+  h1 Dynamic content
+
+  if error
+    p Error getting dynamic content.
+  else
+    p The dashboard has the following record counts:
+
+    ul
+      li #[strong Team Count:] !{data.team_count}
+      li #[strong User Count:] !{data.user_count}
+      li #[strong Session Count:] !{data.session_count} 

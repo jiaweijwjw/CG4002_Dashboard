@@ -1,0 +1,36 @@
+{
+  "name": "dashboard",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "zxc": "echo \"Error: no test specified\" && exit 1",
+    "server": "node backend/server.js",
+    "nodemon-server": "nodemon backend/server.js",
+    "client": "npm start --prefix frontend/materialUI",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "concurrently \"npm run nodemon-server\" \"npm run client\""
+  },
+  "keywords": [],
+  "author": "Lim Jia Wei",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "async": "^3.2.0",
+    "axios": "^0.20.0",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.3.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.6.1",
+    "http-errors": "^1.8.0",
+    "mongoose": "^5.10.2",
+    "mongoose-unique-validator": "^2.0.3",
+    "morgan": "^1.10.0",
+    "pug": "^3.0.0",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {}
+}
