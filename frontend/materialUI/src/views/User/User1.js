@@ -48,8 +48,6 @@ export default function User1() {
 
   const [team, setTeam] = useState(dataFromInitialSend); // returns the current state and a function that updates it.
   console.log(dataFromInitialSend); // only for the first render will have value.
-  console.log('mounted');
-  console.log(team);
 
   useEffect(() => { // happens after render. SOMEHOW NOT WORKING, REQUIRES REFRESH OF PAGE ONCE.
     socket.on('changes_in_db', data => {
@@ -140,7 +138,7 @@ export default function User1() {
                 </p>
                 </div>
               </CardFooter>
-              <GridItem sm={3}>
+              {/* <GridItem sm={3}>
                 <Card>
                   <CardHeader>
                     <h3 className={classes.cardTitle}>LEGEND</h3>
@@ -152,7 +150,7 @@ export default function User1() {
                     <p>0 - 50% BAD</p>
                   </CardBody>
                 </Card>
-              </GridItem>
+              </GridItem> */}
             </Card>
           </GridItem>
 

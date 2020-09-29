@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -32,39 +32,85 @@ import CardFooter from "components/Card/CardFooter.js";
 import { bugs, website, server } from "variables/general.js";
 
 import {
-  dailySalesChart,
+  currentSessionChart,
   emailsSubscriptionChart,
   completedTasksChart
-} from "variables/charts_copy.js";
+} from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
-
-import axios from 'axios';
 import service from '../../services/service';
-import {socket} from '../../services/socket';
-
-
-
+import { socket, dataFromInitialSend, dataFromChangesInDB } from '../../services/socket';
+// import { initialData } from '../../services/beforeRenderData';
 const useStyles = makeStyles(styles);
 
 export default function Team() {
   const classes = useStyles();
 
-  const [team, setTeam] = useState([]); // returns the current state and a function that updates it.
+  const [team, setTeam] = useState(dataFromInitialSend); // returns the current state and a function that updates it.
+  console.log(dataFromInitialSend); // only for the first render will have value.
 
-  useEffect(() => { // componentdidmount()
-    // socket.on('changes_in_db', getTeam());
-  });
+  useEffect(() => { // happens after render. SOMEHOW NOT WORKING, REQUIRES REFRESH OF PAGE ONCE.
+    socket.on('changes_in_db', data => {
+      console.log('received change stream data');
+      setTeam([data]);
+      console.log('useEffect should re-render');
+    });
+  }, []); // THIS [] argument is important as it cleans up on unmount.
 
-  
-  // requires refresh
+
+  // THIS DOES POLLING if socket is disconnected. DOES NOT REQUIRE REFRESH OF PAGE. 
   const getTeam = async () => {
     let res = await service.getAll();
+    console.log(socket.connected);
     // console.log(res);
     setTeam(res);
   }
+  if (!socket.connected) {
+    getTeam();
+    console.log('polling');
+  };
 
-  socket.on('changes_in_db', getTeam());
+  function getPerformanceGrade(iteration_grade) {
+    // iteration_grade only from 0-100%
+    if (iteration_grade >= 90) {
+      return 'Perfect';
+    } else if (iteration_grade >= 70) {
+      return 'Good';
+    } else if (iteration_grade >= 50) {
+      return 'Almost there';
+    } else {
+      return 'Try again';
+    }
+    /* use switch for the dance move indicator instead
+    switch(iteration_grade){   
+        case 1: return "FOO";
+        case 2: return "BAR";
+        case 3: return "FOOBAR";
+        default: return "OK";      
+    } */
+  };
+
+  function x_axis(num_of_iterations) {
+    var arr = [];
+    for (var i = 0; i < num_of_iterations; i++) {
+      arr.push('_');
+    }
+    console.log(arr);
+    return arr;
+  };
+
+  function currentSessionAxis(team) {
+    var num_of_iterations = team.users[0].user_session_graph.length;
+    console.log(num_of_iterations);
+    var userCurrentSessionStats = {
+      data: {
+        labels: [] = x_axis(num_of_iterations),
+        series: [team.users[0].user_session_graph]
+      }
+    }
+    console.log(team.users[0].user_session_graph);
+    return userCurrentSessionStats.data;
+  };
 
   const renderTeam = team => {
     return (
@@ -79,7 +125,7 @@ export default function Team() {
               </CardIcon> */}
                 <p className={classes.cardCategory}>Performance</p>
                 <h3 className={classes.cardTitle}>
-                  not yet implemented {/* <small>GB</small> */}
+                  {getPerformanceGrade(team.users[0].iteration_score)} {/* <small>GB</small> */}
                 </h3>
               </CardHeader>
               <CardFooter stats>
@@ -92,7 +138,7 @@ export default function Team() {
                 </p>
                 </div>
               </CardFooter>
-              <GridItem sm={3}>
+              {/* <GridItem sm={3}>
                 <Card>
                   <CardHeader>
                     <h3 className={classes.cardTitle}>LEGEND</h3>
@@ -104,7 +150,7 @@ export default function Team() {
                     <p>0 - 50% BAD</p>
                   </CardBody>
                 </Card>
-              </GridItem>
+              </GridItem> */}
             </Card>
           </GridItem>
 
@@ -112,7 +158,7 @@ export default function Team() {
             <GridContainer>
               <Card>
                 <CardHeader color="success" /* stats */ icon>
-                   {/* <CardIcon color="success">
+                  {/* <CardIcon color="success">
                   <Store />
                 </CardIcon>  */}
                   <p className={classes.cardCategory}>Current Dance Move:</p>
@@ -145,7 +191,7 @@ export default function Team() {
                     <p className={classes.cardCategory}>Current Position:</p>
                   </CardHeader>
                   <CardBody>
-                <h3>{team.users[0].current_position}</h3>
+                    <h3>lol</h3>
                   </CardBody>
                 </Card>
               </GridItem>
@@ -193,6 +239,8 @@ export default function Team() {
           </Card>
         </GridItem> */}
         </GridContainer>
+
+
         <GridContainer>
           <GridItem xs={9} sm={9}> {/* CONTAINER FOR BOTH GRAPHS */}
             <GridContainer> {/* CONTAINER WITHIN CONTAINER */}
@@ -203,24 +251,24 @@ export default function Team() {
                   <CardHeader color="success">
                     <ChartistGraph
                       className="ct-chart"
-                      data={dailySalesChart.data}
+                      data={currentSessionAxis(team)}
                       type="Line"
-                      options={dailySalesChart.options}
-                      listener={dailySalesChart.animation}
+                      options={currentSessionChart.options}
+                    /* listener={currentSessionChart.animation} */
                     />
                   </CardHeader>
-                  <CardBody>
+                  {/* <CardBody>
                     <h4 className={classes.cardTitle}>Current Session Statistics</h4>
-                    {/* <p className={classes.cardCategory}>
-                  <span className={classes.successText}>
-                    <ArrowUpward className={classes.upArrowCardCategory} /> 100%
+                    <p className={classes.cardCategory}>
+                      <span className={classes.successText}>
+                        <ArrowUpward className={classes.upArrowCardCategory} /> 100%
                   </span>{" "}
                   increase in today sales.
-                </p> */}
-                  </CardBody>
+                </p>
+                  </CardBody> */}
                   <CardFooter chart>
                     {/* <div className={classes.stats}>
-                  <AccessTime /> updated 4 minutes ago
+                      <AccessTime /> updated 4 minutes ago
                 </div> */}
                     <div>
                       Your dance performance over time for this session.
@@ -298,3 +346,4 @@ export default function Team() {
 
   return (team.map(team => renderTeam(team)));
 }
+

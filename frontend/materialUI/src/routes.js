@@ -39,19 +39,20 @@ import User1Page from "views/User/User1.js";
 import User2Page from "views/User/User2.js";
 import User3Page from "views/User/User3.js";
 import TeamPage from "views/Team/Team.js";
+
 // import Dashboard from "@material-ui/icons/Dashboard";
 // import DashboardPage from "views/Dashboard/Dashboard.js";
 
 
 const dashboardRoutes = [
-  /*   {
-      path: "/dashboard",
-      name: "Dashboard",
-      // rtlName: "لوحة القيادة",
-      icon: Dashboard,
-      component: DashboardPage,
-      layout: "/admin"
-    }, */
+  /* {
+    path: "/dashboard",
+    name: "Dashboard",
+    // rtlName: "لوحة القيادة",
+    icon: Dashboard,
+    component: Dashboard,
+    layout: "/admin"
+  }, */
   {
     path: "/team",
     name: "Team",
