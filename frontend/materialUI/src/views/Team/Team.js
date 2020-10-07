@@ -33,6 +33,7 @@ import { bugs, website, server } from "variables/general.js";
 
 import {
   currentSessionChart,
+  teamSynchronizationChart,
   emailsSubscriptionChart,
   completedTasksChart
 } from "variables/charts.js";
@@ -95,7 +96,7 @@ export default function Team() {
     for (var i = 0; i < num_of_iterations; i++) {
       arr.push('_');
     }
-    console.log(arr);
+    // console.log(arr);
     return arr;
   };
 
@@ -108,136 +109,121 @@ export default function Team() {
         series: [team.users[0].user_session_graph]
       }
     }
-    console.log(team.users[0].user_session_graph);
+    // console.log(team.users[0].user_session_graph);
     return userCurrentSessionStats.data;
   };
 
+  function teamSynchronizationAxis(team) {
+    var num_of_iterations = team.timing_difference_graph.length;
+    // console.log(num_of_iterations);
+    var teamSynchronizationStats = {
+      data: {
+        labels: [] = x_axis(num_of_iterations),
+        series: [team.timing_difference_graph]
+      }
+    }
+    return teamSynchronizationStats.data;
+  };
+
   const renderTeam = team => {
+    var tdg_length = team.timing_difference_graph.length;
+    var delay = team.timing_difference_graph[tdg_length - 1];
     return (
       <div>
         <GridContainer>
 
-          <GridItem xs={12} sm={6} /* md={3} */>
+
+          {/* Dancer1 */}
+          <GridItem xs={12} sm={12} md={4}>
             <Card>
-              <CardHeader color="warning" /* stats */ icon>
-                {/* <CardIcon color="warning">
-                <Icon>content_copy</Icon>
-              </CardIcon> */}
-                <p className={classes.cardCategory}>Performance</p>
-                <h3 className={classes.cardTitle}>
-                  {getPerformanceGrade(team.users[0].iteration_score)} {/* <small>GB</small> */}
-                </h3>
+              <CardHeader color="warning">
+                <h2 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Dancer 1</h2>
+                {/* <p className={classes.cardCategoryWhite}>
+                  New employees on 15th September, 2016
+                </p> */}
               </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  {/* <Danger>
-                  <Warning />
-                </Danger> */}
-                  <p /* href="#pablo" */ /* onClick={e => e.preventDefault()} */>
-                    Your performance of every move.
-                </p>
-                </div>
-              </CardFooter>
-              {/* <GridItem sm={3}>
-                <Card>
-                  <CardHeader>
-                    <h3 className={classes.cardTitle}>LEGEND</h3>
-                  </CardHeader>
-                  <CardBody>
-                    <p>90 - 100% PERFECT</p>
-                    <p>70 - 90% GOOD</p>
-                    <p>50 - 70% ALMOST THERE</p>
-                    <p>0 - 50% BAD</p>
-                  </CardBody>
-                </Card>
-              </GridItem> */}
+              <CardBody>
+                <p style={{ textAlignVertical: "center", textAlign: "center", }}>current dance move :</p>
+                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].current_dance_move}</h3>
+                <p style={{ textAlignVertical: "center", textAlign: "center", }}>current position :</p>
+                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].current_position}</h3>
+                <p style={{ textAlignVertical: "center", textAlign: "center", }}>time in ms :</p>
+                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].time_started}</h3>
+              </CardBody>
             </Card>
           </GridItem>
 
-          <GridItem xs={12} sm={6} /* md={3} */>
-            <GridContainer>
-              <Card>
-                <CardHeader color="success" /* stats */ icon>
-                  {/* <CardIcon color="success">
-                  <Store />
-                </CardIcon>  */}
-                  <p className={classes.cardCategory}>Current Dance Move:</p>
-                </CardHeader>
-                <CardBody>
-                  <h3>{team.users[0].current_dance_move}</h3>
-                  <h3>{team.users[0].current_position}</h3>
-                  <h3>{team.users[1].current_dance_move}</h3>
-                  <h3>{team.users[1].current_position}</h3>
-                  <h3>{team.users[2].current_dance_move}</h3>
-                  <h3>{team.users[2].current_position}</h3>
-                  {/* <p>{team.users.map((user, key) => (
-                    <div>
-                      <h2>{user.username}</h2>
-                      <h1>{user.current_position}</h1>
-                      <h2>{user.current_dance_move}</h2>
-                    </div>
-                  ))}</p> */}
-                </CardBody>
-                <CardFooter stats>
-                  <div className={classes.stats}>
-                    {/* <DateRange />
-                  Last 24 Hours */}
-                  </div>
-                </CardFooter>
-              </Card>
-              <GridItem xs={12} sm={6}>
-                <Card>
-                  <CardHeader>
-                    <p className={classes.cardCategory}>Current Position:</p>
-                  </CardHeader>
-                  <CardBody>
-                    <h3>lol</h3>
-                  </CardBody>
-                </Card>
-              </GridItem>
-              <GridItem xs={12} sm={6}>
-                <Card>
-                  <CardHeader>
-                    <p className={classes.cardCategory}>Indicator</p>
-                  </CardHeader>
-                </Card>
-              </GridItem>
-            </GridContainer>
+          {/* Dancer 2 */}
+          <GridItem xs={12} sm={12} md={4}>
+            <Card>
+              <CardHeader color="warning">
+                <h2 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Dancer 2</h2>
+              </CardHeader>
+              <CardBody>
+                <p style={{ textAlignVertical: "center", textAlign: "center", }}>current dance move :</p>
+                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[1].current_dance_move}</h3>
+                <p style={{ textAlignVertical: "center", textAlign: "center", }}>current position :</p>
+                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[1].current_position}</h3>
+                <p style={{ textAlignVertical: "center", textAlign: "center", }}>time in ms :</p>
+                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[1].time_started}</h3>
+              </CardBody>
+            </Card>
           </GridItem>
-          {/* <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="danger" stats icon>
-              <CardIcon color="danger">
-                <Icon>info_outline</Icon>
-              </CardIcon>
-              <p className={classes.cardCategory}>Fixed Issues</p>
-              <h3 className={classes.cardTitle}>75</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <LocalOffer />
-                Tracked from Github
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem> */}
-          {/* <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="info" stats icon>
-              <CardIcon color="info">
-                <Accessibility />
-              </CardIcon>
-              <p className={classes.cardCategory}>Followers</p>
-              <h3 className={classes.cardTitle}>+245</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Update />
-                Just Updated
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem> */}
+
+          {/* Dancer 3 */}
+          <GridItem xs={12} sm={12} md={4}>
+            <Card>
+              <CardHeader color="warning">
+                <h2 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Dancer 3</h2>
+              </CardHeader>
+              <CardBody>
+                <p style={{ textAlignVertical: "center", textAlign: "center", }}>current dance move :</p>
+                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[2].current_dance_move}</h3>
+                <p style={{ textAlignVertical: "center", textAlign: "center", }}>current position :</p>
+                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[2].current_position}</h3>
+                <p style={{ textAlignVertical: "center", textAlign: "center", }}>time in ms :</p>
+                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[2].time_started}</h3>
+              </CardBody>
+            </Card>
+          </GridItem>
+
+
+          <GridItem xs={12} sm={12}>
+            <Card>
+              <CardHeader color={delay > 300 ? "danger" : "success"}>
+                <h5 className={classes.cardTitleWhite}>
+                  {(() => {
+                    if (delay <= 300) {
+                      return (
+                        <div style={{ textAlignVertical: "center", textAlign: "center", }}>Synchronized</div>
+                      )
+                    } else {
+                      return (
+                        <div style={{ textAlignVertical: "center", textAlign: "center", }}>Unsynchronized</div>
+                      )
+                    }
+                  })()}
+                </h5>
+              </CardHeader>
+              <CardBody><div style={{ textAlignVertical: "center", textAlign: "center", }}>Synchronization Indicator</div></CardBody>
+              {/* <CardFooter>
+                <div style={{textAlignVertical: "center",textAlign: "center",}}>Synchronization Indicator</div>
+              </CardFooter> */}
+            </Card>
+          </GridItem>
+
+
+          {/* <GridItem xs={12} sm={6}>
+            <Card>
+              <CardHeader>
+                <p className={classes.cardCategory}>Current Position:</p>
+              </CardHeader>
+              <CardBody>
+                <h3>lol</h3>
+              </CardBody>
+            </Card>
+          </GridItem> */}
+
         </GridContainer>
 
 
@@ -245,10 +231,31 @@ export default function Team() {
           <GridItem xs={9} sm={9}> {/* CONTAINER FOR BOTH GRAPHS */}
             <GridContainer> {/* CONTAINER WITHIN CONTAINER */}
 
+              {/* Synchronization graph */}
+              <GridItem xs={12} sm={12} md={12}>
+                <Card chart>
+                  <CardHeader color="primary">
+                    <ChartistGraph
+                      className="ct-chart"
+                      data={teamSynchronizationAxis(team)}
+                      type="Line"
+                      options={teamSynchronizationChart.options}
+                    /* listener={currentSessionChart.animation} */
+                    />
+                  </CardHeader>
+                  <CardFooter chart>
+                    <div>
+                      Team synchronization for each dance move. Time difference is in milliseconds.
+                </div>
+                  </CardFooter>
+                </Card>
+              </GridItem>
+
+
               {/* CURRENT SESSION GRAPH */}
               <GridItem xs={12} sm={12} md={12}>
                 <Card chart>
-                  <CardHeader color="success">
+                  <CardHeader color="info">
                     <ChartistGraph
                       className="ct-chart"
                       data={currentSessionAxis(team)}
@@ -271,11 +278,13 @@ export default function Team() {
                       <AccessTime /> updated 4 minutes ago
                 </div> */}
                     <div>
-                      Your dance performance over time for this session.
+                      testing
                 </div>
                   </CardFooter>
                 </Card>
               </GridItem>
+
+
 
               {/* PAST SESSIONS GRAPH */}
               <GridItem xs={12} sm={12} md={12}>
@@ -307,13 +316,93 @@ export default function Team() {
           </GridItem>
           <GridItem xs={3} sm={3}>
             <Card>
-              <CardHeader>
-                <p className={classes.cardCategory}>List of dance moves:</p>
+              <CardHeader color="warning">
+                <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>List of dance moves</h4>
               </CardHeader>
+              <CardBody>
+                asd
+              </CardBody>
             </Card>
           </GridItem>
 
         </GridContainer>
+
+        <GridItem xs={12} sm={12} /* md={3} */>
+          <Card>
+            <CardHeader color="success" /* stats */ icon>
+              {/* <CardIcon color="success">
+                  <Store />
+                </CardIcon>  */}
+              <p className={classes.cardCategory}>Current Dance Move:</p>
+            </CardHeader>
+            <CardBody>
+              <h3>{team.users[0].current_dance_move}</h3>
+              <h3>{team.users[0].current_position}</h3>
+              <h3>{team.users[0].time_started}</h3>
+              <h3>{team.users[1].current_dance_move}</h3>
+              <h3>{team.users[1].current_position}</h3>
+              <h3>{team.users[1].time_started}</h3>
+              <h3>{team.users[2].current_dance_move}</h3>
+              <h3>{team.users[2].current_position}</h3>
+              <h3>{team.users[2].time_started}</h3>
+              {/* <p>{team.users.map((user, key) => (
+                    <div>
+                      <h2>{user.username}</h2>
+                      <h1>{user.current_position}</h1>
+                      <h2>{user.current_dance_move}</h2>
+                    </div>
+                  ))}</p> */}
+            </CardBody>
+            <CardFooter stats>
+              <div className={classes.stats}>
+                {/* <DateRange />
+                  Last 24 Hours */}
+              </div>
+            </CardFooter>
+          </Card>
+
+
+
+        </GridItem>
+        {/* <GridItem xs={12} sm={6} md={3}>
+          <Card>
+            <CardHeader color="danger" stats icon>
+              <CardIcon color="danger">
+                <Icon>info_outline</Icon>
+              </CardIcon>
+              <p className={classes.cardCategory}>Fixed Issues</p>
+              <h3 className={classes.cardTitle}>75</h3>
+            </CardHeader>
+            <CardFooter stats>
+              <div className={classes.stats}>
+                <LocalOffer />
+                Tracked from Github
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem> */}
+        {/* <GridItem xs={12} sm={6} md={3}>
+          <Card>
+            <CardHeader color="info" stats icon>
+              <CardIcon color="info">
+                <Accessibility />
+              </CardIcon>
+              <p className={classes.cardCategory}>Followers</p>
+              <h3 className={classes.cardTitle}>+245</h3>
+            </CardHeader>
+            <CardFooter stats>
+              <div className={classes.stats}>
+                <Update />
+                Just Updated
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem> */}
+
+
+
+
+
 
         {/* RAW SENSOR VALUE TABLE */}
         <GridContainer>

@@ -43,7 +43,7 @@ import { socket, dataFromInitialSend, dataFromChangesInDB } from '../../services
 // import { initialData } from '../../services/beforeRenderData';
 const useStyles = makeStyles(styles);
 
-export default function User1() {
+export default function User3() {
   const classes = useStyles();
 
   const [team, setTeam] = useState(dataFromInitialSend); // returns the current state and a function that updates it.
@@ -193,8 +193,11 @@ export default function User1() {
               <GridItem xs={12} sm={6}>
                 <Card>
                   <CardHeader>
-                    <p className={classes.cardCategory}>Indicator</p>
+                    <p className={classes.cardCategory}>Time lagged after first dancer</p>
                   </CardHeader>
+                  <CardBody>
+                  <h3>{team.users[2].time_started}</h3>
+                  </CardBody>
                 </Card>
               </GridItem>
             </GridContainer>

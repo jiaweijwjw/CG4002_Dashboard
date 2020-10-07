@@ -193,8 +193,11 @@ export default function User1() {
               <GridItem xs={12} sm={6}>
                 <Card>
                   <CardHeader>
-                    <p className={classes.cardCategory}>Indicator</p>
+                    <p className={classes.cardCategory}>Time lagged after first dancer</p>
                   </CardHeader>
+                  <CardBody>
+                  <h3>{team.users[0].time_started}</h3>
+                  </CardBody>
                 </Card>
               </GridItem>
             </GridContainer>

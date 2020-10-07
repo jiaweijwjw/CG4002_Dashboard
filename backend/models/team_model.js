@@ -14,6 +14,10 @@ const teamSchema = new Schema({
     minlength: 3,
     unique: true
   },
+  timing_difference_graph: {
+    type: [],
+    default: []
+  },
   users: {
     type: [userSubSchema], // array of subdocuments
     default: [{username: 'user1'}, {username: 'user2'}, {username: 'user3'}]

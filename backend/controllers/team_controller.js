@@ -86,14 +86,21 @@ exports.team_update_whole = function (req, res) {
     var team_name = req.params.teamname;
     // var team = Team.find({ "teamname": team_name });
 
-    for (i = 0; i < req.body.length; i++) {
+    // var first_timing = 0; // the smallest. will it always be 0?
+    var last_timing = 0; // the largest
+
+    for (i = 0; i < req.body.length; i++) { 
+        if (req.body[i].time_started > last_timing) {
+            last_timing = req.body[i].time_started;
+        };
         Team.update(
             { "teamname": team_name, "users.username": req.body[i].username }, // update(query, update, options)
             {
                 "$set": {
                     "users.$.current_dance_move": req.body[i].current_dance_move,
                     "users.$.current_position": req.body[i].current_position,
-                    "users.$.iteration_score": req.body[i].iteration_score
+                    "users.$.iteration_score": req.body[i].iteration_score,
+                    "users.$.time_started": req.body[i].time_started
                 },
                 "$push": {
                     "users.$.user_session_graph": req.body[i].iteration_score
@@ -105,7 +112,15 @@ exports.team_update_whole = function (req, res) {
             }
         )
     };
-    res.send('updated'); // not required
+    Team.updateOne({ "teamname": team_name },
+        { $push: { timing_difference_graph: last_timing } },
+        function (err, doc) {
+            if (err) throw err;
+        }
+    );
+  
+    res.send(JSON.stringify(last_timing)); 
+    // res.send('updated');
     /* for (i = 0; i < team.users.length; i++) { 
     if (req.body[1].username === team.users.username) {
         team.users.current_dance_move = req.body[1].current_dance_move;
@@ -131,6 +146,16 @@ exports.team_clear_array = function (req, res) {
             }
         )
     };
+    Team.updateOne({ "teamname": team_name },
+        {
+            "$set": {
+                "timing_difference_graph": []
+            }
+        },
+        function (err, doc) {
+            if (err) throw err;
+        }
+    );
     res.send('cleared array'); // not required
 };
 
@@ -153,7 +178,7 @@ exports.team_create = function (req, res) {
         res.status(200).json({ 'team': 'team added successfully' });
     })
         .catch(err => {
-            res.status(400).send('failedd');
+            res.status(400).send('failed');
         });
 
 };

@@ -27,6 +27,11 @@ const userSubSchema = new SubSchema({
     // required: true,
     min: 0, max: 100, default: 0
   },
+  time_started: {
+    type: Number,
+    // required: true,
+    default: 0
+  },
   user_session_graph: {
     type: [Number],
     default: []

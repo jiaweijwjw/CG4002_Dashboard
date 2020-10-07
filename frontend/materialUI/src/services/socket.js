@@ -18,6 +18,7 @@ socket.on('initialSend', data => {
     console.log(dataFromInitialSend);
 });
 
-socket.on('changes_in_db', data => {
+// CAN REMOVE THIS
+/* socket.on('changes_in_db', data => {
     dataFromChangesInDB = data;
-});
+}); */
