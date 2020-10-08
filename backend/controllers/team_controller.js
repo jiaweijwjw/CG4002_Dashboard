@@ -127,17 +127,10 @@ exports.team_update_whole = async function (req, res) {
 
     team.timing_difference_graph.push(last_timing);
     team.list_of_dance_moves.push(dance_move_done);
-    
+
     await team.save();
     console.log(team);
 
-
-    /* Team.updateOne({ "teamname": team_name },
-        { $push: { timing_difference_graph: last_timing, list_of_dance_moves: dance_move_done } },
-        function (err, doc) {
-            if (err) throw err;
-        }
-    ); */
     /* Session.updateOne({"sessionNumber": session_num},
         { $push: {list_of_dance_moves_done: dance_move}},
         function (err, doc) {
@@ -146,14 +139,28 @@ exports.team_update_whole = async function (req, res) {
     ); */
 
     res.send(JSON.stringify(last_timing));
-    // res.send('updated');
-    /* for (i = 0; i < team.users.length; i++) { 
-    if (req.body[1].username === team.users.username) {
-        team.users.current_dance_move = req.body[1].current_dance_move;
-        team.users.current_position = req.body[1].current_position;
-        team.save();
-    }
-} */
+
+};
+
+exports.new_session = async function (req, res) {
+    var team_name = req.params.teamname;
+
+    const team = await Team.findOne({"teamname": team_name});
+    var teamSize = team.users.length;
+
+    for (i = 0; i < teamSize; i++) {
+        team.users[i].current_dance_move = 'stationary';
+        team.users[i].current_position = 2;
+        team.users[i].iteration_score = 0;
+        team.users[i].time_started = 0;
+        team.users[i].user_session_graph = [];
+    };
+
+    team.timing_difference_graph = [];
+    team.list_of_dance_moves = [];
+
+    await team.save();
+    res.send('cleared array'); // not required
 };
 
 exports.team_update_whole_original = function (req, res) {
@@ -247,35 +254,7 @@ exports.create_session = function (req, res) {
 
 };
 
-exports.new_session = function (req, res) {
-    var team_name = req.params.teamname;
-    for (i = 0; i < req.body.length; i++) {
-        Team.update(
-            { "teamname": team_name, "users.username": req.body[i].username }, // update(query, update, options)
-            {
-                "$set": {
-                    "users.$.user_session_graph": [],
-                },
-            },
-            function (err, doc) {
-                if (err) throw err;
-                // res.send('successfully updated'); // can just console.log()
-            }
-        )
-    };
-    Team.updateOne({ "teamname": team_name },
-        {
-            "$set": {
-                "timing_difference_graph": [],
-                "list_of_dance_moves": []
-            }
-        },
-        function (err, doc) {
-            if (err) throw err;
-        }
-    );
-    res.send('cleared array'); // not required
-};
+
 
 exports.team_clear_array = function (req, res) {
     var team_name = req.params.teamname;
