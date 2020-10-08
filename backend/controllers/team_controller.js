@@ -82,9 +82,81 @@ exports.team_update = function (req, res) {
 
 };
 
+exports.team_update_whole = async function (req, res) {
+    var team_name = req.params.teamname;
+    var session_num = req.params.sessionnumber;
+
+    // var first_timing = 0; // the smallest. will it always be 0?
+    var last_timing = 0; // the largest
+    // let dance_moves = [];
+    let dance_moves_map = new Map();
+    let dance_move_done = 'stationary'
+
+    const team = await Team.findOne({"teamname": team_name});
+    //team.current_session_number = 1;
+    
+
+    for (i = 0; i < req.body.length; i++) {
+
+        team.users[i].current_dance_move = req.body[i].current_dance_move;
+        team.users[i].current_position = req.body[i].current_position;
+        team.users[i].iteration_score = req.body[i].iteration_score;
+        team.users[i].time_started = req.body[i].time_started;
+        team.users[i].user_session_graph.push(req.body[i].iteration_score);
+
+        if (req.body[i].time_started > last_timing) {
+            last_timing = req.body[i].time_started;
+        };
+        if (dance_moves_map.has(req.body[i].current_dance_move)) {
+            dance_moves_map.set(req.body[i].current_dance_move, dance_moves_map.get(req.body[i].current_dance_move)+1);
+        } else {
+            dance_moves_map.set(req.body[i].current_dance_move, 1);
+        }
+        console.log(dance_moves_map);
+        
+    };
+
+    for (let [key, value] of dance_moves_map) {
+        if (value >= 2) {
+            dance_move_done = key;
+        } else if (Math.max(...dance_moves_map.values()) == 1) {
+            dance_move_done = 'unknown'
+        }
+    }
+    console.log(dance_move_done);
+
+    team.timing_difference_graph.push(last_timing);
+    team.list_of_dance_moves.push(dance_move_done);
+    
+    await team.save();
+    console.log(team);
 
 
-exports.team_update_whole = function (req, res) {
+    /* Team.updateOne({ "teamname": team_name },
+        { $push: { timing_difference_graph: last_timing, list_of_dance_moves: dance_move_done } },
+        function (err, doc) {
+            if (err) throw err;
+        }
+    ); */
+    /* Session.updateOne({"sessionNumber": session_num},
+        { $push: {list_of_dance_moves_done: dance_move}},
+        function (err, doc) {
+            if (err) throw err;
+        }
+    ); */
+
+    res.send(JSON.stringify(last_timing));
+    // res.send('updated');
+    /* for (i = 0; i < team.users.length; i++) { 
+    if (req.body[1].username === team.users.username) {
+        team.users.current_dance_move = req.body[1].current_dance_move;
+        team.users.current_position = req.body[1].current_position;
+        team.save();
+    }
+} */
+};
+
+exports.team_update_whole_original = function (req, res) {
     var team_name = req.params.teamname;
     var session_num = req.params.sessionnumber;
 

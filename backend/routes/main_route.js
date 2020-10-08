@@ -25,6 +25,8 @@ router.post('/cleararray/:teamname', team_controller.team_clear_array);
 // creating a team with 3 users and 1 default session.
 router.put('/team/create', team_controller.team_create);
 
+router.post('/newsession/:teamname', team_controller.new_session);
+
 router.put('/create/session/:sessionnumber', team_controller.create_session);
 
 
