@@ -22,9 +22,18 @@ const teamSchema = new Schema({
     type: [userSubSchema], // array of subdocuments
     default: [{username: 'user1'}, {username: 'user2'}, {username: 'user3'}]
   },
-  sessions: {
+  /* sessions: {
     type: [sessionSubSchema], // array of subdocuments
     default: [{sessionNumber: 0}]
+  } */
+  list_of_dance_moves: {
+    type: [],
+    default: []
+  },
+  sessions: [{ type: Schema.Types.ObjectId, ref: 'sessionSubSchema' }],
+  current_session_number: {
+    type: Number,
+    default: 0
   }
 });
 

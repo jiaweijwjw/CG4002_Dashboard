@@ -127,7 +127,8 @@ export default function Team() {
 
   const renderTeam = team => {
     var tdg_length = team.timing_difference_graph.length;
-    var delay = team.timing_difference_graph[tdg_length - 1];
+    console.log(tdg_length);
+    var delay = (team.timing_difference_graph[tdg_length - 1] || -1);
     return (
       <div>
         <GridContainer>
@@ -190,10 +191,14 @@ export default function Team() {
 
           <GridItem xs={12} sm={12}>
             <Card>
-              <CardHeader color={delay > 300 ? "danger" : "success"}>
+              <CardHeader color={delay == -1 ? "info" : (delay > 300 ? "danger" : "success")}>
                 <h5 className={classes.cardTitleWhite}>
                   {(() => {
-                    if (delay <= 300) {
+                    if (delay == -1) {
+                      return (
+                        <div style={{ textAlignVertical: "center", textAlign: "center", }}>Not yet started</div>
+                      )
+                    } else if (delay <= 300) {
                       return (
                         <div style={{ textAlignVertical: "center", textAlign: "center", }}>Synchronized</div>
                       )
@@ -205,10 +210,10 @@ export default function Team() {
                   })()}
                 </h5>
               </CardHeader>
-              <CardBody><div style={{ textAlignVertical: "center", textAlign: "center", }}>Synchronization Indicator</div></CardBody>
-              {/* <CardFooter>
-                <div style={{textAlignVertical: "center",textAlign: "center",}}>Synchronization Indicator</div>
-              </CardFooter> */}
+              {/* <CardBody><div style={{ textAlignVertical: "center", textAlign: "center", }}>Synchronization Indicator</div></CardBody> */}
+              <CardFooter>
+                <div style={{ textAlignVertical: "center", textAlign: "center", }}>Synchronization Indicator</div>
+              </CardFooter>
             </Card>
           </GridItem>
 
@@ -320,8 +325,17 @@ export default function Team() {
                 <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>List of dance moves</h4>
               </CardHeader>
               <CardBody>
-                asd
+                <h4>
+                {team.list_of_dance_moves.map(dance_move => (
+                  <li>{dance_move}</li>
+                ))}
+                </h4>
               </CardBody>
+              <CardFooter>
+              <div className={classes.stats}>
+                      Dance move done by the team. If more than 2 dancers are doing the same dance move, it will be considered as a dance move, else it will be unknown.
+                </div>
+              </CardFooter>
             </Card>
           </GridItem>
 

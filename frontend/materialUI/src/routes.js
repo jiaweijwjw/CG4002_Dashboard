@@ -62,21 +62,21 @@ const dashboardRoutes = [
   },
   {
     path: "/user1",
-    name: "User1",
+    name: "Dancer1",
     icon: Person,
     component: User1Page,
     layout: "/admin"
   },
   {
     path: "/user2",
-    name: "User2",
+    name: "Dancer2",
     icon: Person,
     component: User2Page,
     layout: "/admin"
   },
   {
     path: "/user3",
-    name: "User3",
+    name: "Dancer3",
     icon: Person,
     component: User3Page,
     layout: "/admin"

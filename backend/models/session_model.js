@@ -9,7 +9,7 @@ const sessionSubSchema = new SubSchema({
         min: 0,
         default: 0
     }, 
-    list_of_moves_done: {
+    list_of_dance_moves_done: {
         type: [String],
         default: undefined
     },

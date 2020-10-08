@@ -82,17 +82,33 @@ exports.team_update = function (req, res) {
 
 };
 
+
+
 exports.team_update_whole = function (req, res) {
     var team_name = req.params.teamname;
-    // var team = Team.find({ "teamname": team_name });
+    var session_num = req.params.sessionnumber;
 
     // var first_timing = 0; // the smallest. will it always be 0?
     var last_timing = 0; // the largest
+    // let dance_moves = [];
+    let dance_moves_map = new Map();
+    let dance_move_done = 'stationary'
 
-    for (i = 0; i < req.body.length; i++) { 
+    for (i = 0; i < req.body.length; i++) {
         if (req.body[i].time_started > last_timing) {
             last_timing = req.body[i].time_started;
         };
+        if (dance_moves_map.has(req.body[i].current_dance_move)) {
+            dance_moves_map.set(req.body[i].current_dance_move, dance_moves_map.get(req.body[i].current_dance_move)+1);
+        } else {
+            dance_moves_map.set(req.body[i].current_dance_move, 1);
+        }
+        console.log(dance_moves_map);
+        // var obj = {"move_name": '', "count": 0};
+        // obj["move_name"] = req.body[i].current_dance_move;
+        // obj["count"] += 1;
+        // dance_moves.push(obj);
+        
         Team.update(
             { "teamname": team_name, "users.username": req.body[i].username }, // update(query, update, options)
             {
@@ -112,14 +128,28 @@ exports.team_update_whole = function (req, res) {
             }
         )
     };
+    for (let [key, value] of dance_moves_map) {
+        if (value >= 2) {
+            dance_move_done = key;
+        } else if (Math.max(...dance_moves_map.values()) == 1) {
+            dance_move_done = 'unknown'
+        }
+    }
+    console.log(dance_move_done);
     Team.updateOne({ "teamname": team_name },
-        { $push: { timing_difference_graph: last_timing } },
+        { $push: { timing_difference_graph: last_timing, list_of_dance_moves: dance_move_done } },
         function (err, doc) {
             if (err) throw err;
         }
     );
-  
-    res.send(JSON.stringify(last_timing)); 
+    /* Session.updateOne({"sessionNumber": session_num},
+        { $push: {list_of_dance_moves_done: dance_move}},
+        function (err, doc) {
+            if (err) throw err;
+        }
+    ); */
+
+    res.send(JSON.stringify(last_timing));
     // res.send('updated');
     /* for (i = 0; i < team.users.length; i++) { 
     if (req.body[1].username === team.users.username) {
@@ -128,6 +158,51 @@ exports.team_update_whole = function (req, res) {
         team.save();
     }
 } */
+};
+
+exports.create_session = function (req, res) {
+    var session_num = req.params.sessionnumber;
+
+    const session = new Session();
+    // team.teamname = JSON.stringify(req.body.teamname);
+    session.sessionNumber = session_num;
+    session.save().then(session => {
+        res.status(200).json({ 'session': 'session added successfully' });
+    })
+        .catch(err => {
+            res.status(400).send('failed');
+        });
+
+};
+
+exports.new_session = function (req, res) {
+    var team_name = req.params.teamname;
+    for (i = 0; i < req.body.length; i++) {
+        Team.update(
+            { "teamname": team_name, "users.username": req.body[i].username }, // update(query, update, options)
+            {
+                "$set": {
+                    "users.$.user_session_graph": [],
+                },
+            },
+            function (err, doc) {
+                if (err) throw err;
+                // res.send('successfully updated'); // can just console.log()
+            }
+        )
+    };
+    Team.updateOne({ "teamname": team_name },
+        {
+            "$set": {
+                "timing_difference_graph": [],
+                "list_of_dance_moves": []
+            }
+        },
+        function (err, doc) {
+            if (err) throw err;
+        }
+    );
+    res.send('cleared array'); // not required
 };
 
 exports.team_clear_array = function (req, res) {
@@ -149,7 +224,8 @@ exports.team_clear_array = function (req, res) {
     Team.updateOne({ "teamname": team_name },
         {
             "$set": {
-                "timing_difference_graph": []
+                "timing_difference_graph": [],
+                "list_of_dance_moves": []
             }
         },
         function (err, doc) {
@@ -182,7 +258,6 @@ exports.team_create = function (req, res) {
         });
 
 };
-
 
 
 /* exports.team_create = [

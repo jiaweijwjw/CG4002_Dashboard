@@ -16,13 +16,18 @@ router.get('/team/:teamname', team_controller.team_get);
 
 router.get('/user/:teamname/:username', user_controller.user_get);
 
-router.post('/update/:teamname', team_controller.team_update_whole); // THIS HAS TO BE BEFORE THE OTHER TEAM_UPDATE.
+//router.post('/update/:teamname', team_controller.team_update_whole); // THIS HAS TO BE BEFORE THE OTHER TEAM_UPDATE.
+router.post('/update/:teamname/:sessionnumber', team_controller.team_update_whole); // THIS HAS TO BE BEFORE THE OTHER TEAM_UPDATE.
 // for data input from eval server
 // router.post('/update/:teamname/:username/:sessionNumber', team_controller.team_update);
 
 router.post('/cleararray/:teamname', team_controller.team_clear_array);
 // creating a team with 3 users and 1 default session.
 router.put('/team/create', team_controller.team_create);
+
+router.put('/create/session/:sessionnumber', team_controller.create_session);
+
+
 
 module.exports = router;
 
