@@ -44,10 +44,10 @@ import { socket, dataFromInitialSend, dataFromChangesInDB } from '../../services
 // import { initialData } from '../../services/beforeRenderData';
 const useStyles = makeStyles(styles);
 
-export default function Team() {
+export default function Team({team}) {
   const classes = useStyles();
 
-  const [team, setTeam] = useState(dataFromInitialSend); // returns the current state and a function that updates it.
+  /* const [team, setTeam] = useState(dataFromInitialSend); // returns the current state and a function that updates it.
   console.log(dataFromInitialSend); // only for the first render will have value.
 
   useEffect(() => { // happens after render. SOMEHOW NOT WORKING, REQUIRES REFRESH OF PAGE ONCE.
@@ -70,7 +70,7 @@ export default function Team() {
     getTeam();
     console.log('polling');
   };
-
+  */
   function getPerformanceGrade(iteration_grade) {
     // iteration_grade only from 0-100%
     if (iteration_grade >= 90) {

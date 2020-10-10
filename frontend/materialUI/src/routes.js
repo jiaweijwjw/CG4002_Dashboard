@@ -60,7 +60,7 @@ const dashboardRoutes = [
     component: TeamPage,
     layout: "/admin"
   },
-  /* {
+  {
     path: "/user1",
     name: "Dancer1",
     icon: Person,
@@ -80,7 +80,7 @@ const dashboardRoutes = [
     icon: Person,
     component: User3Page,
     layout: "/admin"
-  }, */
+  },
   /*
   {
     path: "/user",

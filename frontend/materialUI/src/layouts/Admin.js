@@ -18,17 +18,25 @@ import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 import bgImage from "assets/img/sidebar-2.jpg";
 import logo from "assets/img/NUSlogo.jpg";
 
+import service from '../services/service';
+import { socket, dataFromInitialSend, dataFromChangesInDB } from '../services/socket';
 
 let ps;
 
-const switchRoutes = (
+function switchRoutes(team) {
+  return (
   <Switch>
     {routes.map((prop, key) => { // routes is an array of the different routes
       if (prop.layout === "/admin") {
         return (
           <Route
             path={prop.layout + prop.path}
-            component={prop.component}
+            // component={prop.component} 
+            /* component={<prop.component team={team} />}  */
+            component={() => (<prop.component team={team}/>)}
+            /* component={(team) => (
+              <prop.component {...props} asd={team} />
+            )} */
             key={key}
           />
         );
@@ -37,11 +45,38 @@ const switchRoutes = (
     })}
     <Redirect from="/admin" to="/admin/team" />
   </Switch>
-);
+  )
+};
 
 const useStyles = makeStyles(styles);
 
 export default function Admin({ ...rest }) {
+
+
+  const [team, setTeam] = useState(dataFromInitialSend); // returns the current state and a function that updates it.
+  console.log(dataFromInitialSend); // only for the first render will have value.
+
+  useEffect(() => { // happens after render. SOMEHOW NOT WORKING, REQUIRES REFRESH OF PAGE ONCE.
+    socket.on('changes_in_db', data => {
+      console.log('received change stream data');
+      setTeam([data]);
+      console.log('useEffect should re-render');
+    });
+  }, []); // THIS [] argument is important as it cleans up on unmount.
+
+
+  // THIS DOES POLLING if socket is disconnected. DOES NOT REQUIRE REFRESH OF PAGE. 
+  const getTeam = async () => {
+    let res = await service.getAll();
+    console.log(socket.connected);
+    // console.log(res);
+    setTeam(res);
+  }
+  if (!socket.connected) {
+    getTeam();
+    console.log('polling');
+  };
+
 
   // styles
   const classes = useStyles();
@@ -115,10 +150,10 @@ export default function Admin({ ...rest }) {
         {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
           <div className={classes.content}>
-            <div className={classes.container}>{switchRoutes}</div>
+            <div className={classes.container}>{switchRoutes(team)}</div>
           </div>
         ) : (
-            <div className={classes.map}>{switchRoutes}</div>
+            <div className={classes.map}>{switchRoutes(team)}</div>
           )}
         {/* {getRoute() ? <Footer /> : null} */}
         {/* <FixedPlugin
