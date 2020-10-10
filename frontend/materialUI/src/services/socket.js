@@ -1,6 +1,7 @@
 // dedicated file ensures we only connect this socket once.
 import clientSocket from 'socket.io-client';
-export const socket = clientSocket('http://localhost:5000');
+
+// ALWAYS CHANGE THIS WHEN IP ADDRESS CHANGE
 
 socket.on('connect', () => {
     console.log('connected to server');

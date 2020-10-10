@@ -63,9 +63,7 @@ io.on('connect', socket => { // socket here is communication channel to the clie
       console.log('server sent out initialSend');
       console.log(docs);
     });
-
     // socket.emit('initialSend', 'fuck this shit');
-    
     // console.log(team);
   })
   /* socket.emit('initialSend', () => {
