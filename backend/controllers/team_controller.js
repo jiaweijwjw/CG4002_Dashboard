@@ -92,9 +92,9 @@ exports.team_update_whole = async function (req, res) {
     let dance_moves_map = new Map();
     let dance_move_done = 'stationary'
 
-    const team = await Team.findOne({"teamname": team_name});
+    const team = await Team.findOne({ "teamname": team_name });
     //team.current_session_number = 1;
-    
+
 
     for (i = 0; i < req.body.length; i++) {
 
@@ -108,12 +108,12 @@ exports.team_update_whole = async function (req, res) {
             last_timing = req.body[i].time_started;
         };
         if (dance_moves_map.has(req.body[i].current_dance_move)) {
-            dance_moves_map.set(req.body[i].current_dance_move, dance_moves_map.get(req.body[i].current_dance_move)+1);
+            dance_moves_map.set(req.body[i].current_dance_move, dance_moves_map.get(req.body[i].current_dance_move) + 1);
         } else {
             dance_moves_map.set(req.body[i].current_dance_move, 1);
         }
         console.log(dance_moves_map);
-        
+
     };
 
     for (let [key, value] of dance_moves_map) {
@@ -145,9 +145,25 @@ exports.team_update_whole = async function (req, res) {
 exports.new_session = async function (req, res) {
     var team_name = req.params.teamname;
 
-    const team = await Team.findOne({"teamname": team_name});
+    const team = await Team.findOne({ "teamname": team_name });
     var teamSize = team.users.length;
-
+    var len = team.timing_difference_graph.length;
+    const thisSession = new Session();
+    thisSession.sessionNumber = team.current_session_number;
+    console.log(thisSession);
+    // const session = await Session.findOne({ "sessionNumber": team.current_session_number });
+    thisSession.list_of_dance_moves_done = team.list_of_dance_moves;
+    thisSession.averageDelay = (len) => {
+        let num_of_moves = len
+        let count = 0;
+        for (let i = 0; i < num_of_moves; i++) {
+            count += team.timing_difference_graph[i];
+        }
+        console.log(count);
+        console.log(num_of_moves);
+        return count / num_of_moves;
+    }
+    console.log(thisSession.averageDelay);
     for (i = 0; i < teamSize; i++) {
         team.users[i].current_dance_move = 'stationary';
         team.users[i].current_position = 2;
@@ -158,10 +174,36 @@ exports.new_session = async function (req, res) {
 
     team.timing_difference_graph = [];
     team.list_of_dance_moves = [];
+    team.current_session_number += 1;
+
+     // how to guarantee it is the updated value?
+    await thisSession.save().then(thisSession => {
+        res.status(200).json({ 'session': 'session added successfully' });
+    })
+        .catch(err => {
+            res.status(400).send('failed');
+        });
 
     await team.save();
-    res.send('cleared array'); // not required
+    // res.send('cleared array'); // not required
 };
+
+
+exports.create_session = function (req, res) {
+    var session_num = req.params.sessionnumber;
+
+    const session = new Session();
+    // team.teamname = JSON.stringify(req.body.teamname);
+    session.sessionNumber = session_num;
+    session.save().then(session => {
+        res.status(200).json({ 'session': 'session added successfully' });
+    })
+        .catch(err => {
+            res.status(400).send('failed');
+        });
+
+};
+
 
 exports.team_update_whole_original = function (req, res) {
     var team_name = req.params.teamname;
@@ -178,7 +220,7 @@ exports.team_update_whole_original = function (req, res) {
             last_timing = req.body[i].time_started;
         };
         if (dance_moves_map.has(req.body[i].current_dance_move)) {
-            dance_moves_map.set(req.body[i].current_dance_move, dance_moves_map.get(req.body[i].current_dance_move)+1);
+            dance_moves_map.set(req.body[i].current_dance_move, dance_moves_map.get(req.body[i].current_dance_move) + 1);
         } else {
             dance_moves_map.set(req.body[i].current_dance_move, 1);
         }
@@ -187,7 +229,7 @@ exports.team_update_whole_original = function (req, res) {
         // obj["move_name"] = req.body[i].current_dance_move;
         // obj["count"] += 1;
         // dance_moves.push(obj);
-        
+
         Team.update(
             { "teamname": team_name, "users.username": req.body[i].username }, // update(query, update, options)
             {
@@ -239,20 +281,7 @@ exports.team_update_whole_original = function (req, res) {
 } */
 };
 
-exports.create_session = function (req, res) {
-    var session_num = req.params.sessionnumber;
 
-    const session = new Session();
-    // team.teamname = JSON.stringify(req.body.teamname);
-    session.sessionNumber = session_num;
-    session.save().then(session => {
-        res.status(200).json({ 'session': 'session added successfully' });
-    })
-        .catch(err => {
-            res.status(400).send('failed');
-        });
-
-};
 
 
 

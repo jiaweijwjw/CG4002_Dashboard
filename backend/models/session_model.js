@@ -11,17 +11,15 @@ const sessionSubSchema = new SubSchema({
     }, 
     list_of_dance_moves_done: {
         type: [String],
-        default: undefined
+        default: []
     },
     /* user_individual_overall_grade: {
         type: Map, // how to ensure the user names are unique?
         of: Number
     }, */
-    overall_team_grade: {
+    averageDelay: {
         type: Number,
-        // required: true,
         min: 0,
-        max: 100,
         default: 0
     }
 });
