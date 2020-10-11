@@ -25,26 +25,22 @@ let ps;
 
 function switchRoutes(team) {
   return (
-  <Switch>
-    {routes.map((prop, key) => { // routes is an array of the different routes
-      if (prop.layout === "/admin") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            // component={prop.component} 
-            /* component={<prop.component team={team} />}  */
-            component={() => (<prop.component team={team}/>)}
-            /* component={(team) => (
-              <prop.component {...props} asd={team} />
-            )} */
-            key={key}
-          />
-        );
-      }
-      return null;
-    })}
-    <Redirect from="/admin" to="/admin/team" />
-  </Switch>
+    <Switch>
+      {routes.map((prop, key) => { // routes is an array of the different routes
+        if (prop.layout === "/admin") {
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              // component={prop.component} 
+              component={() => (<prop.component team={team} />)} // using component={} instead of render={}
+              key={key}
+            />
+          );
+        }
+        return null;
+      })}
+      <Redirect from="/admin" to="/admin/team" />
+    </Switch>
   )
 };
 

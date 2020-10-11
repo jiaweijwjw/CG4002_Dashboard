@@ -20,7 +20,7 @@ const teamSchema = new Schema({
   },
   users: {
     type: [userSubSchema], // array of subdocuments
-    default: [{username: 'user1'}, {username: 'user2'}, {username: 'user3'}]
+    default: [{username: 'dancer1'}, {username: 'dancer2'}, {username: 'dancer3'}]
   },
   /* sessions: {
     type: [sessionSubSchema], // array of subdocuments

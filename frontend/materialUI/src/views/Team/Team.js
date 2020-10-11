@@ -44,7 +44,7 @@ import { socket, dataFromInitialSend, dataFromChangesInDB } from '../../services
 // import { initialData } from '../../services/beforeRenderData';
 const useStyles = makeStyles(styles);
 
-export default function Team({team}) {
+export default function Team({ team }) {
   const classes = useStyles();
 
   /* const [team, setTeam] = useState(dataFromInitialSend); // returns the current state and a function that updates it.
@@ -261,13 +261,13 @@ export default function Team({team}) {
               <GridItem xs={12} sm={12} md={12}>
                 <Card chart>
                   <CardHeader color="info">
-                    <ChartistGraph
+                    {/* <ChartistGraph
                       className="ct-chart"
                       data={currentSessionAxis(team)}
                       type="Line"
                       options={currentSessionChart.options}
-                    /* listener={currentSessionChart.animation} */
-                    />
+                    // listener={currentSessionChart.animation} 
+                    /> */}
                   </CardHeader>
                   {/* <CardBody>
                     <h4 className={classes.cardTitle}>Current Session Statistics</h4>
@@ -326,14 +326,14 @@ export default function Team({team}) {
               </CardHeader>
               <CardBody>
                 <h4>
-                {team.list_of_dance_moves.map(dance_move => (
-                  <li>{dance_move}</li>
-                ))}
+                  {team.list_of_dance_moves.map(dance_move => (
+                    <li>{dance_move}</li>
+                  ))}
                 </h4>
               </CardBody>
               <CardFooter>
-              <div className={classes.stats}>
-                      Dance move done by the team. If more than 2 dancers are doing the same dance move, it will be considered as a dance move, else it will be unknown.
+                <div className={classes.stats}>
+                  Dance move done by the team. If more than 2 dancers are doing the same dance move, it will be considered as a dance move, else it will be unknown.
                 </div>
               </CardFooter>
             </Card>

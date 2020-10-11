@@ -43,32 +43,32 @@ import { socket, dataFromInitialSend, dataFromChangesInDB } from '../../services
 // import { initialData } from '../../services/beforeRenderData';
 const useStyles = makeStyles(styles);
 
-export default function User2({team}) {
+export default function User2({ team }) {
   const classes = useStyles();
 
- /*  const [team, setTeam] = useState(dataFromInitialSend); // returns the current state and a function that updates it.
-  console.log(dataFromInitialSend); // only for the first render will have value.
-
-  useEffect(() => { // happens after render. SOMEHOW NOT WORKING, REQUIRES REFRESH OF PAGE ONCE.
-    socket.on('changes_in_db', data => {
-      console.log('received change stream data');
-      setTeam([data]);
-      console.log('useEffect should re-render');
-    });
-  }, []); // THIS [] argument is important as it cleans up on unmount.
-
-
-  // THIS DOES POLLING if socket is disconnected. DOES NOT REQUIRE REFRESH OF PAGE. 
-  const getTeam = async () => {
-    let res = await service.getAll();
-    console.log(socket.connected);
-    // console.log(res);
-    setTeam(res);
-  }
-  if (!socket.connected) {
-    getTeam();
-    console.log('polling');
-  }; */
+  /*  const [team, setTeam] = useState(dataFromInitialSend); // returns the current state and a function that updates it.
+   console.log(dataFromInitialSend); // only for the first render will have value.
+ 
+   useEffect(() => { // happens after render. SOMEHOW NOT WORKING, REQUIRES REFRESH OF PAGE ONCE.
+     socket.on('changes_in_db', data => {
+       console.log('received change stream data');
+       setTeam([data]);
+       console.log('useEffect should re-render');
+     });
+   }, []); // THIS [] argument is important as it cleans up on unmount.
+ 
+ 
+   // THIS DOES POLLING if socket is disconnected. DOES NOT REQUIRE REFRESH OF PAGE. 
+   const getTeam = async () => {
+     let res = await service.getAll();
+     console.log(socket.connected);
+     // console.log(res);
+     setTeam(res);
+   }
+   if (!socket.connected) {
+     getTeam();
+     console.log('polling');
+   }; */
 
   function getPerformanceGrade(iteration_grade) {
     // iteration_grade only from 0-100%
@@ -124,9 +124,9 @@ export default function User2({team}) {
                 <Icon>content_copy</Icon>
               </CardIcon> */}
                 <p className={classes.cardCategory}>Performance</p>
-                <h3 className={classes.cardTitle}>
-                  {getPerformanceGrade(team.users[1].iteration_score)} {/* <small>GB</small> */}
-                </h3>
+                {/* <h3 className={classes.cardTitle}>
+                  {getPerformanceGrade(team.users[1].iteration_score)} 
+                </h3> */}
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
@@ -196,7 +196,7 @@ export default function User2({team}) {
                     <p className={classes.cardCategory}>Time lagged after first dancer</p>
                   </CardHeader>
                   <CardBody>
-                  <h3>{team.users[1].time_started}</h3>
+                    <h3>{team.users[1].time_started}</h3>
                   </CardBody>
                 </Card>
               </GridItem>
@@ -213,13 +213,13 @@ export default function User2({team}) {
               <GridItem xs={12} sm={12} md={12}>
                 <Card chart>
                   <CardHeader color="success">
-                    <ChartistGraph
+                    {/* <ChartistGraph
                       className="ct-chart"
                       data={currentSessionAxis(team)}
                       type="Line"
                       options={currentSessionChart.options}
-                    /* listener={currentSessionChart.animation} */
-                    />
+                    // listener={currentSessionChart.animation} 
+                    /> */}
                   </CardHeader>
                   {/* <CardBody>
                     <h4 className={classes.cardTitle}>Current Session Statistics</h4>
@@ -242,7 +242,7 @@ export default function User2({team}) {
               </GridItem>
 
               {/* PAST SESSIONS GRAPH */}
-              <GridItem xs={12} sm={12} md={12}>
+              {/* <GridItem xs={12} sm={12} md={12}>
                 <Card chart>
                   <CardHeader color="warning">
                     <ChartistGraph
@@ -264,7 +264,7 @@ export default function User2({team}) {
                 </div>
                   </CardFooter>
                 </Card>
-              </GridItem>
+              </GridItem> */}
             </GridContainer>
 
             {/* LIST OF DANCE MOVES DONE */}
@@ -280,7 +280,7 @@ export default function User2({team}) {
         </GridContainer>
 
         {/* RAW SENSOR VALUE TABLE */}
-        <GridContainer>
+        {/* <GridContainer>
           <GridItem xs={12} sm={12} md={6}>
             <Card>
               <CardHeader color="danger">
@@ -303,7 +303,7 @@ export default function User2({team}) {
               </CardBody>
             </Card>
           </GridItem>
-        </GridContainer>
+        </GridContainer> */}
       </div>
     )
   };

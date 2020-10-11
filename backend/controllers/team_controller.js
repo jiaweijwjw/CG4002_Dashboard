@@ -100,9 +100,9 @@ exports.team_update_whole = async function (req, res) {
 
         team.users[i].current_dance_move = req.body[i].current_dance_move;
         team.users[i].current_position = req.body[i].current_position;
-        team.users[i].iteration_score = req.body[i].iteration_score;
+        // team.users[i].iteration_score = req.body[i].iteration_score;
         team.users[i].time_started = req.body[i].time_started;
-        team.users[i].user_session_graph.push(req.body[i].iteration_score);
+        // team.users[i].user_session_graph.push(req.body[i].iteration_score);
 
         if (req.body[i].time_started > last_timing) {
             last_timing = req.body[i].time_started;

@@ -43,7 +43,7 @@ import { socket, dataFromInitialSend, dataFromChangesInDB } from '../../services
 // import { initialData } from '../../services/beforeRenderData';
 const useStyles = makeStyles(styles);
 
-export default function User3({team}) {
+export default function User3({ team }) {
   const classes = useStyles();
 
   /* const [team, setTeam] = useState(dataFromInitialSend); // returns the current state and a function that updates it.
@@ -124,9 +124,9 @@ export default function User3({team}) {
                 <Icon>content_copy</Icon>
               </CardIcon> */}
                 <p className={classes.cardCategory}>Performance</p>
-                <h3 className={classes.cardTitle}>
-                  {getPerformanceGrade(team.users[2].iteration_score)} {/* <small>GB</small> */}
-                </h3>
+                {/* <h3 className={classes.cardTitle}>
+                  {getPerformanceGrade(team.users[2].iteration_score)} 
+                </h3> */}
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
@@ -196,7 +196,7 @@ export default function User3({team}) {
                     <p className={classes.cardCategory}>Time lagged after first dancer</p>
                   </CardHeader>
                   <CardBody>
-                  <h3>{team.users[2].time_started}</h3>
+                    <h3>{team.users[2].time_started}</h3>
                   </CardBody>
                 </Card>
               </GridItem>
@@ -213,13 +213,13 @@ export default function User3({team}) {
               <GridItem xs={12} sm={12} md={12}>
                 <Card chart>
                   <CardHeader color="success">
-                    <ChartistGraph
+                    {/* <ChartistGraph
                       className="ct-chart"
                       data={currentSessionAxis(team)}
                       type="Line"
                       options={currentSessionChart.options}
-                    /* listener={currentSessionChart.animation} */
-                    />
+                    // listener={currentSessionChart.animation} 
+                    /> */}
                   </CardHeader>
                   {/* <CardBody>
                     <h4 className={classes.cardTitle}>Current Session Statistics</h4>
@@ -242,7 +242,7 @@ export default function User3({team}) {
               </GridItem>
 
               {/* PAST SESSIONS GRAPH */}
-              <GridItem xs={12} sm={12} md={12}>
+              {/* <GridItem xs={12} sm={12} md={12}>
                 <Card chart>
                   <CardHeader color="warning">
                     <ChartistGraph
@@ -264,7 +264,7 @@ export default function User3({team}) {
                 </div>
                   </CardFooter>
                 </Card>
-              </GridItem>
+              </GridItem> */}
             </GridContainer>
 
             {/* LIST OF DANCE MOVES DONE */}
@@ -280,7 +280,7 @@ export default function User3({team}) {
         </GridContainer>
 
         {/* RAW SENSOR VALUE TABLE */}
-        <GridContainer>
+        {/* <GridContainer>
           <GridItem xs={12} sm={12} md={6}>
             <Card>
               <CardHeader color="danger">
@@ -303,7 +303,7 @@ export default function User3({team}) {
               </CardBody>
             </Card>
           </GridItem>
-        </GridContainer>
+        </GridContainer> */}
       </div>
     )
   };

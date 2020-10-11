@@ -9,7 +9,7 @@ const userSubSchema = new SubSchema({
     type: String,
     required: true,
     trim: true,
-    minlength: 3
+    minlength: 1
   },
   current_dance_move: { // can be integer also.
     type: String,
@@ -22,20 +22,20 @@ const userSubSchema = new SubSchema({
     required: true,
     min: 1, max: 3, default: 2
   },
-  iteration_score: {
+  /* iteration_score: {
     type: Number,
     // required: true,
     min: 0, max: 100, default: 0
-  },
+  }, */
   time_started: {
     type: Number,
     // required: true,
     default: 0
   },
-  user_session_graph: {
+  /* user_session_graph: {
     type: [Number],
     default: []
-  },
+  }, */
   session: { // have to use populate here
     type: mongoose.Schema.Types.ObjectId, ref: 'sessionSubSchema'
   }

@@ -35,7 +35,7 @@ const currentSessionChart = {
   },
   // for animation
   animation: {
-    draw: function(data) {
+    draw: function (data) {
       if (data.type === "line" || data.type === "area") {
         data.element.animate({
           d: {
@@ -85,7 +85,7 @@ const teamSynchronizationChart = {
   },
   // for animation
   animation: {
-    draw: function(data) {
+    draw: function (data) {
       if (data.type === "line" || data.type === "area") {
         data.element.animate({
           d: {
@@ -156,7 +156,7 @@ const emailsSubscriptionChart = {
       {
         seriesBarDistance: 5,
         axisX: {
-          labelInterpolationFnc: function(value) {
+          labelInterpolationFnc: function (value) {
             return value[0];
           }
         }
@@ -164,7 +164,7 @@ const emailsSubscriptionChart = {
     ]
   ],
   animation: {
-    draw: function(data) {
+    draw: function (data) {
       if (data.type === "bar") {
         data.element.animate({
           opacity: {
@@ -203,7 +203,7 @@ const completedTasksChart = {
     }
   },
   animation: {
-    draw: function(data) {
+    draw: function (data) {
       if (data.type === "line" || data.type === "area") {
         data.element.animate({
           d: {

@@ -2,7 +2,7 @@ import os
 import sys
 import random
 import time
-import requests
+import requests # For sending HTTP request to update database.
 
 import socket
 import threading
