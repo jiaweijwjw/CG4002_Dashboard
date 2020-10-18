@@ -29,6 +29,8 @@ router.post('/newsession/:teamname', team_controller.new_session);
 
 router.put('/create/session/:sessionnumber', team_controller.create_session);
 
+router.post('/team/changeSessionNumber/:teamname', team_controller.changeSessionNumber);
+
 
 
 module.exports = router;

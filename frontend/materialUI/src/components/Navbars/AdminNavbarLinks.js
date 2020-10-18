@@ -20,6 +20,7 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
+import {newSession} from "../../services/httpservice.js";
 
 const useStyles = makeStyles(styles);
 
@@ -65,18 +66,23 @@ export default function AdminNavbarLinks() {
           <Search />
         </Button> */}
       </div>
+      
+      
       <Button
-        color={window.innerWidth > 959 ? "transparent" : "white"}
-        justIcon={window.innerWidth > 959}
+        color={"rose"}
         simple={!(window.innerWidth > 959)}
-        aria-label="Dashboard"
+        aria-label="new session"
         className={classes.buttonLink}
-      >
-        <Dashboard className={classes.icons} />
-        <Hidden mdUp implementation="css">
-          <p className={classes.linkText}>Dashboard</p>
-        </Hidden>
+        onClick={newSession}
+        >
+          NEW SESSION
       </Button>
+      
+
+
+
+
+
       <div className={classes.manager}>
         <Button
           color={window.innerWidth > 959 ? "transparent" : "white"}
@@ -155,6 +161,11 @@ export default function AdminNavbarLinks() {
           )}
         </Poppers>
       </div>
+
+
+
+
+
       <div className={classes.manager}>
         <Button
           color={window.innerWidth > 959 ? "transparent" : "white"}
@@ -222,3 +233,16 @@ export default function AdminNavbarLinks() {
     </div>
   );
 }
+
+{/* <Button
+        color={window.innerWidth > 959 ? "transparent" : "white"}
+        justIcon={window.innerWidth > 959}
+        simple={!(window.innerWidth > 959)}
+        aria-label="Dashboard"
+        className={classes.buttonLink}
+      >
+        <Dashboard className={classes.icons} />
+        <Hidden mdUp implementation="css">
+          <p className={classes.linkText}>Dashboard</p>
+        </Hidden>
+      </Button> */}

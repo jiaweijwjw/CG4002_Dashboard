@@ -205,6 +205,17 @@ exports.create_session = function (req, res) {
 
 };
 
+exports.changeSessionNumber = async function (req, res) {
+    var team_name = req.params.teamname;
+    let num = req.body[0].number;
+
+    const team = await Team.findOne({ "teamname": team_name });
+    team.current_session_number = num;
+    await team.save();
+    console.log(team);
+
+    res.send(JSON.stringify(num));
+};
 
 exports.team_update_whole_original = function (req, res) {
     var team_name = req.params.teamname;
