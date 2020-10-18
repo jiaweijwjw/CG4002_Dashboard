@@ -292,7 +292,7 @@ export default function Team({ team }) {
 
 
               {/* PAST SESSIONS GRAPH */}
-              <GridItem xs={12} sm={12} md={12}>
+              {/* <GridItem xs={12} sm={12} md={12}>
                 <Card chart>
                   <CardHeader color="warning">
                     <ChartistGraph
@@ -314,7 +314,7 @@ export default function Team({ team }) {
                 </div>
                   </CardFooter>
                 </Card>
-              </GridItem>
+              </GridItem> */}
             </GridContainer>
 
             {/* LIST OF DANCE MOVES DONE */}
@@ -341,12 +341,12 @@ export default function Team({ team }) {
 
         </GridContainer>
 
-        <GridItem xs={12} sm={12} /* md={3} */>
+        {/* <GridItem xs={12} sm={12} >
           <Card>
-            <CardHeader color="success" /* stats */ icon>
-              {/* <CardIcon color="success">
+            <CardHeader color="success" icon>
+               <CardIcon color="success">
                   <Store />
-                </CardIcon>  */}
+                </CardIcon>  
               <p className={classes.cardCategory}>Current Dance Move:</p>
             </CardHeader>
             <CardBody>
@@ -359,25 +359,15 @@ export default function Team({ team }) {
               <h3>{team.users[2].current_dance_move}</h3>
               <h3>{team.users[2].current_position}</h3>
               <h3>{team.users[2].time_started}</h3>
-              {/* <p>{team.users.map((user, key) => (
-                    <div>
-                      <h2>{user.username}</h2>
-                      <h1>{user.current_position}</h1>
-                      <h2>{user.current_dance_move}</h2>
-                    </div>
-                  ))}</p> */}
             </CardBody>
             <CardFooter stats>
               <div className={classes.stats}>
-                {/* <DateRange />
-                  Last 24 Hours */}
+                 <DateRange />
+                  Last 24 Hours 
               </div>
             </CardFooter>
           </Card>
-
-
-
-        </GridItem>
+        </GridItem> */}
         {/* <GridItem xs={12} sm={6} md={3}>
           <Card>
             <CardHeader color="danger" stats icon>
@@ -419,7 +409,7 @@ export default function Team({ team }) {
 
 
         {/* RAW SENSOR VALUE TABLE */}
-        <GridContainer>
+        {/* <GridContainer>
           <GridItem xs={12} sm={12} md={6}>
             <Card>
               <CardHeader color="danger">
@@ -442,7 +432,7 @@ export default function Team({ team }) {
               </CardBody>
             </Card>
           </GridItem>
-        </GridContainer>
+        </GridContainer> */}
       </div>
     )
   };

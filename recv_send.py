@@ -14,6 +14,8 @@ import pandas as pd
 from Crypto.Cipher import AES
 from Crypto import Random
 
+MESSAGE_SIZE = 3 # position, 1 action, sync
+
 class Server(threading.Thread):
     def __init__(self, ip_addr, port_num, dancer_num):
         super(Server, self).__init__()
@@ -44,8 +46,15 @@ class Server(threading.Thread):
         decrypted_message = cipher.decrypt(decoded_message[16:]).strip()
         decrypted_message = decrypted_message.decode('utf8')
 
+        decrypted_message = decrypted_message[decrypted_message.find('#'):]
+        decrypted_message = bytes(decrypted_message[1:], 'utf8').decode('utf8')
+
+        messages = decrypted_message.split('|')
+        position, action, sync = messages[:MESSAGE_SIZE]
+
+        print("position: " + position + ", action: " + action + ", sync: " + sync)
         return {
-            'message': decrypted_message
+            'position': position, 'action': action, 'sync':sync
         }
 
     def run(self):
@@ -56,7 +65,6 @@ class Server(threading.Thread):
                 try:
                     msg = data.decode("utf8")
                     decrypted_message = self.decrypt_message(msg)
-                    print(decrypted_message)
                     #INSERT YOUR CODE HERE
 
                     #TODO UPDATE TO DATABASE
@@ -67,33 +75,28 @@ class Server(threading.Thread):
 
                     # In a function, convert decrypted_message to json format
                     # Currently, our json format is as such: 
-                    ''' 
                     payload = [ 
                         {
                             "username": "dancer1",
-                            "current_dance_move": "zigzag",
-                            "current_position": 3,
-                            "time_started": 50
+                            "current_dance_move": decrypted_message['action'],
+                            "current_position": 1,
+                            "time_started": 0
                         },
                         {
                             "username": "dancer2",
-                            "current_dance_move": "rocket",
+                            "current_dance_move": decrypted_message['action'],
                             "current_position": 2,
                             "time_started": 0
                         },
                         {
                             "username": "dancer3",
-                            "current_dance_move": "rocket",
-                            "current_position": 1,
-                            "time_started": 500
+                            "current_dance_move": decrypted_message['action'],
+                            "current_position": 3,
+                            "time_started": 0
                         }
                     ]
-                    '''
-                    # Send it like so: 
-                    '''
                     response = requests.post(url, json=payload, headers=headers)
                     print(response.text)
-                    '''
 
                     #######################
                 except Exception as e:

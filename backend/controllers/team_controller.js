@@ -146,23 +146,24 @@ exports.new_session = async function (req, res) {
     var team_name = req.params.teamname;
 
     const team = await Team.findOne({ "teamname": team_name });
-    var teamSize = team.users.length;
-    var len = team.timing_difference_graph.length;
-    const thisSession = new Session();
+    let teamSize = team.users.length;
+    let len = team.timing_difference_graph.length;
+    let thisSession = new Session();
     thisSession.sessionNumber = team.current_session_number;
     console.log(thisSession);
     // const session = await Session.findOne({ "sessionNumber": team.current_session_number });
     thisSession.list_of_dance_moves_done = team.list_of_dance_moves;
-    thisSession.averageDelay = (len) => {
-        let num_of_moves = len
+
+    function calcAvgDelay(len) { // Average delay THROUGHOUT A SESSION. Not each dance move.
         let count = 0;
-        for (let i = 0; i < num_of_moves; i++) {
+        for (let i = 0; i < len; i++) {
             count += team.timing_difference_graph[i];
         }
         console.log(count);
-        console.log(num_of_moves);
-        return count / num_of_moves;
+        console.log(len);
+        return (count / len);
     }
+    thisSession.averageDelay = calcAvgDelay(len);
     console.log(thisSession.averageDelay);
     for (i = 0; i < teamSize; i++) {
         team.users[i].current_dance_move = 'stationary';
@@ -176,7 +177,7 @@ exports.new_session = async function (req, res) {
     team.list_of_dance_moves = [];
     team.current_session_number += 1;
 
-     // how to guarantee it is the updated value?
+    // how to guarantee it is the updated value?
     await thisSession.save().then(thisSession => {
         res.status(200).json({ 'session': 'session added successfully' });
     })
