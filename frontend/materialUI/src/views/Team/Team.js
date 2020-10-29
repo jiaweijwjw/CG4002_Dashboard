@@ -41,6 +41,10 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Input from '@material-ui/core/Input';
 // TILL HERE
 
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+
 import { TextField, FormControl, InputLabel, FormHelperText } from '@material-ui/core';
 import Button from "components/CustomButtons/Button.js";
 import SendIcon from '@material-ui/icons/Send'
@@ -67,18 +71,26 @@ const useStyles = makeStyles(styles);
 
 export default function Team({ team }) {
   const classes = useStyles();
-  // console.log(team);
 
   const [sessionNumber, setSessionNumber] = React.useState('');
   const [sessionChanged, setSessionChanged] = useState([]);
 
+  const sessionInfo = useRef([]);
+  const simplifiedSession = useRef();
+
   const handleChange = event => {
     setSessionNumber(event.target.value);
-    // let test = fetchSessionInfo(sessionNumber);
   };
 
-  const sessionInfo = useRef([]);
-  const simplifiedSession = useRef(null);
+  const [switchView, setSwitchView] = React.useState({
+    checkedA: true,
+    checkedB: false,
+  });
+
+  const handleChangeSwitch = (event) => {
+    setSwitchView({ ...switchView, [event.target.name]: event.target.checked });
+  };
+
 
   async function fetchSessionInfo(sessionNum) {
     let res = await axios.get('/main/team/B14/' + sessionNum)
@@ -94,13 +106,9 @@ export default function Team({ team }) {
 
 
   useLayoutEffect(() => { // whats the difference from useEffect again?
-    console.log('sessionInfo before useRef', sessionInfo); // only this will be the updated value
-    console.log('sessionChanged before useRef', sessionChanged);
     sessionInfo.current = sessionChanged;
-    console.log(simplifiedSession.current = sessionInfo.current[0]); 
-    console.log('sessionInfo after useRef', sessionInfo);
-    console.log('sessionChanged after useRef', sessionChanged);
-  }, [sessionChanged]);
+    simplifiedSession.current = sessionInfo.current[0];
+  }, [sessionChanged]); // depends on whether sessionChanged is mutated
 
   const keyPress = async (e) => {
     if (e.key === "Enter") {
@@ -114,45 +122,6 @@ export default function Team({ team }) {
     }
   };
 
-
-
-  /* var keyPress = async(e) => { // the input will go in here as e.
-    if (e.key === "Enter") {
-      console.log(sessionNumber);
-      console.log('session number', e.target.value);
-      console.log(await fetchSessionInfo(sessionNumber)); //  doesnt return, rest is ok
-      // setSessionInfo(res);
-      //console.log(abc); // why is it undefined
-      setSessionNumber('');
-      console.log(sessionNumber);
-    }
-  }; */
-
-
-  /* const [team, setTeam] = useState(dataFromInitialSend); // returns the current state and a function that updates it.
-  console.log(dataFromInitialSend); // only for the first render will have value.
-
-  useEffect(() => { // happens after render. SOMEHOW NOT WORKING, REQUIRES REFRESH OF PAGE ONCE.
-    socket.on('changes_in_db', data => {
-      console.log('received change stream data');
-      setTeam([data]);
-      console.log('useEffect should re-render');
-    });
-  }, []); // THIS [] argument is important as it cleans up on unmount.
-
-
-  // THIS DOES POLLING if socket is disconnected. DOES NOT REQUIRE REFRESH OF PAGE. 
-  const getTeam = async () => {
-    let res = await service.getAll();
-    console.log(socket.connected);
-    // console.log(res);
-    setTeam(res);
-  }
-  if (!socket.connected) {
-    getTeam();
-    console.log('polling');
-  };
-  */
   function getPerformanceGrade(iteration_grade) {
     // iteration_grade only from 0-100%
     if (iteration_grade >= 90) {
@@ -229,11 +198,122 @@ export default function Team({ team }) {
     return teamSynchronizationStats.data;
   };
 
-  const required = true;
-  const disabled = false;
+  const renderHistoryView = (team) => {
+    if (switchView.checkedB) {
+      return (
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="rose">
+              <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Current Session Number: <b>{team.current_session_number}</b></h4>
+              {/* <p className={classes.cardCategoryWhite}>
+                  New employees on 15th September, 2016
+                </p>  */}
+            </CardHeader>
+            <CardBody>
+              <GridItem xs={12} sm={12} md={12}>
+                <div className={classes.root}>
 
 
-  const renderTeam = team => {
+                  <div>
+                    <TextField
+                      id="outlined-full-width"
+                      label="Which session would you like to search for?"
+                      style={{ margin: 8 }}
+                      placeholder="Session number"
+                      helperText="Please input the desired session number. (Must be smaller than current session number)"
+                      fullWidth
+                      type="number"
+                      InputProps={{ inputProps: { min: 1, max: team.current_session_number } }} // DOESNT WORK IN VALIDATING
+                      margin="normal"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      color="secondary"
+                      value={sessionNumber} // this is to show the use what they have type
+                      onKeyDown={keyPress} // handle changes on Enter key
+                      onChange={handleChange} // update sessionNumber on any input by user
+                    />
+                  </div>
+                </div>
+
+              </GridItem>
+              <p>
+                <h4 className={classes.cardTitle} style={{ textAlignVertical: "center", textAlign: "center", }}>Average Delay for the selected session: <b>{(() => {
+                  if (simplifiedSession.current == null) {
+                    return (0)
+                  } else {
+                    return (
+                      ' ' + simplifiedSession.current.averageDelay + ' '
+                    )
+                  }
+                })()}</b> ms</h4>
+              </p>
+              <GridItem xs={12} sm={12} md={12}>
+                <Card chart>
+                  <CardHeader color="primary">
+                    <ChartistGraph
+                      className="ct-chart"
+                      /* data={teamSynchronizationAxis(simplifiedSession.current) || []} */
+                      data={(() => {
+                        if (simplifiedSession.current == null) {
+                          return ([])
+                        } else {
+                          return (
+                            teamSynchronizationAxis(simplifiedSession.current)
+                          )
+                        }
+                      })()}
+                      type="Line"
+                      options={teamSynchronizationChart.options}
+                    /* listener={teamSynchronizationChart.animation} */
+                    />
+                  </CardHeader>
+                  <CardFooter chart>
+                    <div>
+                      Team synchronization for selected session. Time difference is in milliseconds.
+                </div>
+                  </CardFooter>
+                </Card>
+              </GridItem>
+              <GridItem xs={12} sm={12}>
+                <Card>
+                  <CardHeader color="warning">
+                    <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>List of dance moves done this session.</h4>
+                  </CardHeader>
+                  <CardBody>
+                    <h4>
+                      {
+                        sessionInfo.current.map(session => {
+                          return <ol>{session.list_of_dance_moves_done.map(dance_move => (<li>{dance_move}</li>))}</ol>
+                        })
+                      }
+                    </h4>
+                    {/* <h4>
+                      {
+                        sessionInfo.current.map(session => {
+                          return session.list_of_dance_moves_done.map(dance_move => (dance_move + ' --> '))
+                        })
+                      }
+                    </h4> */}
+                  </CardBody>
+                  <CardFooter>
+                    <div className={classes.stats}>
+                      Dance move done by the team. If more than 2 dancers are doing the same dance move, it will be considered as a dance move, else it will be unknown.
+                </div>
+                  </CardFooter>
+                </Card>
+              </GridItem>
+            </CardBody>
+          </Card>
+          </GridItem>
+      );
+    } else {
+      return (null);
+    }
+  };
+
+  const renderTeam = (team) => {
     var tdg_length = team.timing_difference_graph.length;
     // console.log(tdg_length);
     var delay = (team.timing_difference_graph[tdg_length - 1] || -1);
@@ -326,7 +406,7 @@ export default function Team({ team }) {
               </CardBody> */}
               <CardFooter>
                 {/* <div style={{ textAlignVertical: "center", textAlign: "center", }}>Synchronization Indicator</div> */}
-                <div style={{ textAlignVertical: "center", textAlign: "center", }}>Delay between first and last dancer : {team.users[2].time_started}</div>
+                <div style={{ textAlignVertical: "center", textAlign: "center", }}>Delay between first and last dancer : <b>{team.users[2].time_started}</b></div>
               </CardFooter>
             </Card>
           </GridItem>
@@ -371,7 +451,7 @@ export default function Team({ team }) {
               </GridItem>
 
 
-              {/* CURRENT SESSION GRAPH */}
+              {/* AVG DELAY GRAPH */}
               <GridItem xs={12} sm={12} md={12}>
                 <Card chart>
                   <CardHeader color="info">
@@ -403,106 +483,24 @@ export default function Team({ team }) {
                 </Card>
               </GridItem>
 
+
               <GridItem xs={12} sm={12} md={12}>
-                <Card>
-                  <CardHeader color="rose">
-                    <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Current Session Number: {team.current_session_number}</h4>
-                    {/* <p className={classes.cardCategoryWhite}>
-                  New employees on 15th September, 2016
-                </p> */}
-                  </CardHeader>
-                  <CardBody>
-                    <GridItem xs={12} sm={12} md={12}>
-                      <div className={classes.root}>
+                <FormGroup className={classes.formGroup}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={switchView.checkedB}
+                        onChange={handleChangeSwitch}
+                        name="checkedB"
+                        color="primary"
+                      />
+                    }
+                    label="View Past Session"
+                  />
+                </FormGroup>
+                </GridItem>
 
-
-                        <div>
-                          <TextField
-                            id="outlined-full-width"
-                            label="Which session would you like to search for?"
-                            style={{ margin: 8 }}
-                            placeholder="Session number"
-                            helperText="Please input the desired session number. (Must be smaller than current session number)"
-                            fullWidth
-                            type="number"
-                            InputProps={{ inputProps: { min: 1, max: team.current_session_number } }} // DOESNT WORK IN VALIDATING
-                            margin="normal"
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                            variant="outlined"
-                            color="secondary"
-                            value={sessionNumber} // this is to show the use what they have type
-                            onKeyDown={keyPress} // handle changes on Enter key
-                            onChange={handleChange} // update sessionNumber on any input by user
-                          />
-                        </div>
-                      </div>
-
-                    </GridItem>
-                    <p>
-                    <h4 className={classes.cardTitle} style={{ textAlignVertical: "center", textAlign: "center", }}>Average Delay for the selected session: {(() => {
-                              if (simplifiedSession.current == null) {
-                                return (0)
-                              } else {
-                                return (
-                                  ' ' + simplifiedSession.current.averageDelay + ' '
-                                )
-                              }
-                            })()} ms</h4>
-                    </p>
-                    <GridItem xs={12} sm={12} md={12}>
-                      <Card chart>
-                        <CardHeader color="primary">
-                          <ChartistGraph
-                            className="ct-chart"
-                            /* data={teamSynchronizationAxis(simplifiedSession.current) || []} */
-                            data={(() => {
-                              if (simplifiedSession.current == null) {
-                                return ([])
-                              } else {
-                                return (
-                                  teamSynchronizationAxis(simplifiedSession.current)
-                                )
-                              }
-                            })()}
-                            type="Line"
-                            options={teamSynchronizationChart.options}
-                          /* listener={teamSynchronizationChart.animation} */
-                          />
-                        </CardHeader>
-                        <CardFooter chart>
-                          <div>
-                            Team synchronization for selected session. Time difference is in milliseconds.
-                </div>
-                        </CardFooter>
-                      </Card>
-                    </GridItem>
-                    <GridItem xs={12} sm={12}>
-                      <Card>
-                        <CardHeader color="warning">
-                          <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>List of dance moves done this session.</h4>
-                        </CardHeader>
-                        <CardBody>
-                          <h4>
-                            {
-                              sessionInfo.current.map(session => {
-                                return <ol>{session.list_of_dance_moves_done.map(dance_move => (<li>{dance_move}</li>))}</ol>
-                              })
-                            }
-                          </h4>
-                        </CardBody>
-                        <CardFooter>
-                          <div className={classes.stats}>
-                            Dance move done by the team. If more than 2 dancers are doing the same dance move, it will be considered as a dance move, else it will be unknown.
-                </div>
-                        </CardFooter>
-                      </Card>
-                    </GridItem>
-                  </CardBody>
-                </Card>
-              </GridItem>
-
+                {renderHistoryView(team)}
 
 
 
@@ -533,9 +531,9 @@ export default function Team({ team }) {
 
 
             </GridContainer>
-
-            {/* LIST OF DANCE MOVES DONE */}
           </GridItem>
+
+          {/* LIST OF DANCE MOVES DONE */}
           <GridItem xs={3} sm={3}>
             <Card>
               <CardHeader color="warning">

@@ -63,6 +63,9 @@ const dashboardStyle = {
       lineHeight: "1"
     }
   },
+  formGroup: {
+    alignItems: 'center'
+  },
   cardTitleWhite: {
     color: whiteColor,
     marginTop: "0px",
