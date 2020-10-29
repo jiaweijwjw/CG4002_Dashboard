@@ -11,6 +11,7 @@ const session_controller = require('../controllers/session_controller');
 
 router.get('/team/:teamname', team_controller.team_get);
 
+
 // router.get('/session/:teamname/:username', session_controller.session_get_current);
 // router.get('/session', session_controller.session_get_current);
 
@@ -24,6 +25,7 @@ router.post('/update/:teamname/:sessionnumber', team_controller.team_update_whol
 router.post('/cleararray/:teamname', team_controller.team_clear_array);
 // creating a team with 3 users and 1 default session.
 router.put('/team/create', team_controller.team_create);
+router.get('/team/:teamname/:sessionNum', team_controller.getSessionData);
 
 router.post('/newsession/:teamname', team_controller.new_session);
 

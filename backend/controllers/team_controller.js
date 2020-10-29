@@ -40,6 +40,15 @@ exports.team_get = function (req, res) {
     }); */
 };
 
+exports.getSessionData = async function(req, res) {
+    let team_name = req.params.teamname; // unused
+    let session_Num = req.params.sessionNum;
+
+    Session.findOne({ sessionNumber: session_Num })
+    .then(session => res.send([session]))
+    .catch(error => res.status(400).res.json('Error: ${err}'));
+};
+
 
 /*
 what data will come from eval server?
@@ -142,6 +151,8 @@ exports.team_update_whole = async function (req, res) {
 
 };
 
+
+
 exports.new_session = async function (req, res) {
     var team_name = req.params.teamname;
 
@@ -153,6 +164,7 @@ exports.new_session = async function (req, res) {
     console.log(thisSession);
     // const session = await Session.findOne({ "sessionNumber": team.current_session_number });
     thisSession.list_of_dance_moves_done = team.list_of_dance_moves;
+    thisSession.timing_difference_graph = team.timing_difference_graph;
 
     function calcAvgDelay(len) { // Average delay THROUGHOUT A SESSION. Not each dance move.
         let count = 0;
@@ -163,7 +175,8 @@ exports.new_session = async function (req, res) {
         console.log(len);
         return (count / len);
     }
-    thisSession.averageDelay = calcAvgDelay(len);
+    let avgDelay = calcAvgDelay(len);
+    thisSession.averageDelay = avgDelay;
     console.log(thisSession.averageDelay);
     for (i = 0; i < teamSize; i++) {
         team.users[i].current_dance_move = 'stationary';
@@ -176,6 +189,7 @@ exports.new_session = async function (req, res) {
     team.timing_difference_graph = [];
     team.list_of_dance_moves = [];
     team.current_session_number += 1;
+    team.averageDelayGraph.push(avgDelay);
 
     // how to guarantee it is the updated value?
     await thisSession.save().then(thisSession => {

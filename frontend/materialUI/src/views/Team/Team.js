@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -29,10 +29,28 @@ import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
+// HERE
+// @material-ui/core components
+import Grid from "@material-ui/core/Grid";
+import InputAdornment from "@material-ui/core/InputAdornment";
+// @material-ui/icons
+import People from "@material-ui/icons/People";
+//core components
+import CustomInput from "components/CustomInput/CustomInput.js";
+// import GridItem from "components/Grid/GridItem.js";
+import Input from '@material-ui/core/Input';
+// TILL HERE
+
+import { TextField, FormControl, InputLabel, FormHelperText } from '@material-ui/core';
+import Button from "components/CustomButtons/Button.js";
+import SendIcon from '@material-ui/icons/Send'
+
 import { bugs, website, server } from "variables/general.js";
 
+import { fetchSessionInfo } from "../../services/httpservice.js";
+
 import {
-  currentSessionChart,
+  averageDelayChart,
   teamSynchronizationChart,
   emailsSubscriptionChart,
   completedTasksChart
@@ -42,10 +60,74 @@ import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js"
 import service from '../../services/service';
 import { socket, dataFromInitialSend, dataFromChangesInDB } from '../../services/socket';
 // import { initialData } from '../../services/beforeRenderData';
+
+import axios from 'axios';
+
 const useStyles = makeStyles(styles);
 
 export default function Team({ team }) {
   const classes = useStyles();
+  // console.log(team);
+
+  const [sessionNumber, setSessionNumber] = React.useState('');
+  const [sessionChanged, setSessionChanged] = useState([]);
+
+  const handleChange = event => {
+    setSessionNumber(event.target.value);
+    // let test = fetchSessionInfo(sessionNumber);
+  };
+
+  const sessionInfo = useRef([]);
+  const simplifiedSession = useRef(null);
+
+  async function fetchSessionInfo(sessionNum) {
+    let res = await axios.get('/main/team/B14/' + sessionNum)
+      .then(function (res) {
+        console.log('sent a req to get session info');
+        console.log('raw res data', res.data);
+        //return res.data || [];
+        setSessionChanged(res.data || []);
+        // sessionInfo.current = (res.data || []);
+        // console.log(sessionInfo); // this also uses old value
+      })
+  };
+
+
+  useLayoutEffect(() => { // whats the difference from useEffect again?
+    console.log('sessionInfo before useRef', sessionInfo); // only this will be the updated value
+    console.log('sessionChanged before useRef', sessionChanged);
+    sessionInfo.current = sessionChanged;
+    console.log(simplifiedSession.current = sessionInfo.current[0]); 
+    console.log('sessionInfo after useRef', sessionInfo);
+    console.log('sessionChanged after useRef', sessionChanged);
+  }, [sessionChanged]);
+
+  const keyPress = async (e) => {
+    if (e.key === "Enter") {
+      console.log('check if sessionNumber is set by onChange:', sessionNumber); // check that it is setted by onChange
+      console.log('session number fetched:', e.target.value); // check the input is recorded after Enter key
+      // console.log(setSessionInfo(fetchSessionInfo(sessionNumber)));
+      await fetchSessionInfo(e.target.value);
+      // console.log(sessionInfo); // uses the old value
+      setSessionNumber(''); // on Enter, clear the search box.
+      // console.log(sessionNumber);
+    }
+  };
+
+
+
+  /* var keyPress = async(e) => { // the input will go in here as e.
+    if (e.key === "Enter") {
+      console.log(sessionNumber);
+      console.log('session number', e.target.value);
+      console.log(await fetchSessionInfo(sessionNumber)); //  doesnt return, rest is ok
+      // setSessionInfo(res);
+      //console.log(abc); // why is it undefined
+      setSessionNumber('');
+      console.log(sessionNumber);
+    }
+  }; */
+
 
   /* const [team, setTeam] = useState(dataFromInitialSend); // returns the current state and a function that updates it.
   console.log(dataFromInitialSend); // only for the first render will have value.
@@ -100,6 +182,15 @@ export default function Team({ team }) {
     return arr;
   };
 
+  function sessionNum_axis(num_of_iterations) {
+    var arr = [];
+    for (var i = 1; i <= num_of_iterations; i++) {
+      arr.push(i);
+    }
+    // console.log(arr);
+    return arr;
+  };
+
   function currentSessionAxis(team) {
     var num_of_iterations = team.users[0].user_session_graph.length;
     console.log(num_of_iterations);
@@ -111,6 +202,19 @@ export default function Team({ team }) {
     }
     // console.log(team.users[0].user_session_graph);
     return userCurrentSessionStats.data;
+  };
+
+  function averageDelayAxis(team) {
+    var num_of_iterations = team.averageDelayGraph.length;
+    // console.log(num_of_iterations);
+    var averageDelayStats = {
+      data: {
+        labels: [] = sessionNum_axis(num_of_iterations),
+        series: [team.averageDelayGraph]
+      }
+    }
+    // console.log(team.users[0].user_session_graph);
+    return averageDelayStats.data;
   };
 
   function teamSynchronizationAxis(team) {
@@ -125,9 +229,13 @@ export default function Team({ team }) {
     return teamSynchronizationStats.data;
   };
 
+  const required = true;
+  const disabled = false;
+
+
   const renderTeam = team => {
     var tdg_length = team.timing_difference_graph.length;
-    console.log(tdg_length);
+    // console.log(tdg_length);
     var delay = (team.timing_difference_graph[tdg_length - 1] || -1);
     return (
       <div>
@@ -149,7 +257,8 @@ export default function Team({ team }) {
                 <p style={{ textAlignVertical: "center", textAlign: "center", }}>current position :</p>
                 <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].current_position}</h3>
                 <p style={{ textAlignVertical: "center", textAlign: "center", }}>time in ms :</p>
-                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].time_started}</h3>
+                {/* <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].time_started}</h3> */}
+                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>-</h3>
               </CardBody>
             </Card>
           </GridItem>
@@ -166,7 +275,8 @@ export default function Team({ team }) {
                 <p style={{ textAlignVertical: "center", textAlign: "center", }}>current position :</p>
                 <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[1].current_position}</h3>
                 <p style={{ textAlignVertical: "center", textAlign: "center", }}>time in ms :</p>
-                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[1].time_started}</h3>
+                {/* <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[1].time_started}</h3> */}
+                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>-</h3>
               </CardBody>
             </Card>
           </GridItem>
@@ -183,7 +293,8 @@ export default function Team({ team }) {
                 <p style={{ textAlignVertical: "center", textAlign: "center", }}>current position :</p>
                 <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[2].current_position}</h3>
                 <p style={{ textAlignVertical: "center", textAlign: "center", }}>time in ms :</p>
-                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[2].time_started}</h3>
+                {/* <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[2].time_started}</h3> */}
+                <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>-</h3>
               </CardBody>
             </Card>
           </GridItem>
@@ -191,14 +302,14 @@ export default function Team({ team }) {
 
           <GridItem xs={12} sm={12}>
             <Card>
-              <CardHeader color={delay == -1 ? "info" : (delay > 300 ? "danger" : "success")}>
+              <CardHeader color={delay == -1 ? "info" : (delay > 3000 ? "danger" : "success")}>
                 <h5 className={classes.cardTitleWhite}>
                   {(() => {
                     if (delay == -1) {
                       return (
                         <div style={{ textAlignVertical: "center", textAlign: "center", }}>Not yet started</div>
                       )
-                    } else if (delay <= 300) {
+                    } else if (delay <= 3000) {
                       return (
                         <div style={{ textAlignVertical: "center", textAlign: "center", }}>Synchronized</div>
                       )
@@ -210,9 +321,12 @@ export default function Team({ team }) {
                   })()}
                 </h5>
               </CardHeader>
-              {/* <CardBody><div style={{ textAlignVertical: "center", textAlign: "center", }}>Synchronization Indicator</div></CardBody> */}
+              {/* <CardBody>
+                <h5 style={{ textAlignVertical: "center", textAlign: "center", }}>Delay between first and last dancer : {team.users[2].time_started}</h5>
+              </CardBody> */}
               <CardFooter>
-                <div style={{ textAlignVertical: "center", textAlign: "center", }}>Synchronization Indicator</div>
+                {/* <div style={{ textAlignVertical: "center", textAlign: "center", }}>Synchronization Indicator</div> */}
+                <div style={{ textAlignVertical: "center", textAlign: "center", }}>Delay between first and last dancer : {team.users[2].time_started}</div>
               </CardFooter>
             </Card>
           </GridItem>
@@ -245,7 +359,7 @@ export default function Team({ team }) {
                       data={teamSynchronizationAxis(team)}
                       type="Line"
                       options={teamSynchronizationChart.options}
-                    /* listener={currentSessionChart.animation} */
+                    /* listener={teamSynchronizationChart.animation} */
                     />
                   </CardHeader>
                   <CardFooter chart>
@@ -261,13 +375,13 @@ export default function Team({ team }) {
               <GridItem xs={12} sm={12} md={12}>
                 <Card chart>
                   <CardHeader color="info">
-                    {/* <ChartistGraph
+                    <ChartistGraph
                       className="ct-chart"
-                      data={currentSessionAxis(team)}
+                      data={averageDelayAxis(team)}
                       type="Line"
-                      options={currentSessionChart.options}
+                      options={averageDelayChart.options}
                     // listener={currentSessionChart.animation} 
-                    /> */}
+                    />
                   </CardHeader>
                   {/* <CardBody>
                     <h4 className={classes.cardTitle}>Current Session Statistics</h4>
@@ -283,11 +397,112 @@ export default function Team({ team }) {
                       <AccessTime /> updated 4 minutes ago
                 </div> */}
                     <div>
-                      testing
+                      History of average delay in past sessions.
                 </div>
                   </CardFooter>
                 </Card>
               </GridItem>
+
+              <GridItem xs={12} sm={12} md={12}>
+                <Card>
+                  <CardHeader color="rose">
+                    <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Current Session Number: {team.current_session_number}</h4>
+                    {/* <p className={classes.cardCategoryWhite}>
+                  New employees on 15th September, 2016
+                </p> */}
+                  </CardHeader>
+                  <CardBody>
+                    <GridItem xs={12} sm={12} md={12}>
+                      <div className={classes.root}>
+
+
+                        <div>
+                          <TextField
+                            id="outlined-full-width"
+                            label="Which session would you like to search for?"
+                            style={{ margin: 8 }}
+                            placeholder="Session number"
+                            helperText="Please input the desired session number. (Must be smaller than current session number)"
+                            fullWidth
+                            type="number"
+                            InputProps={{ inputProps: { min: 1, max: team.current_session_number } }} // DOESNT WORK IN VALIDATING
+                            margin="normal"
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            variant="outlined"
+                            color="secondary"
+                            value={sessionNumber} // this is to show the use what they have type
+                            onKeyDown={keyPress} // handle changes on Enter key
+                            onChange={handleChange} // update sessionNumber on any input by user
+                          />
+                        </div>
+                      </div>
+
+                    </GridItem>
+                    <p>
+                    <h4 className={classes.cardTitle} style={{ textAlignVertical: "center", textAlign: "center", }}>Average Delay for the selected session: {(() => {
+                              if (simplifiedSession.current == null) {
+                                return (0)
+                              } else {
+                                return (
+                                  ' ' + simplifiedSession.current.averageDelay + ' '
+                                )
+                              }
+                            })()} ms</h4>
+                    </p>
+                    <GridItem xs={12} sm={12} md={12}>
+                      <Card chart>
+                        <CardHeader color="primary">
+                          <ChartistGraph
+                            className="ct-chart"
+                            /* data={teamSynchronizationAxis(simplifiedSession.current) || []} */
+                            data={(() => {
+                              if (simplifiedSession.current == null) {
+                                return ([])
+                              } else {
+                                return (
+                                  teamSynchronizationAxis(simplifiedSession.current)
+                                )
+                              }
+                            })()}
+                            type="Line"
+                            options={teamSynchronizationChart.options}
+                          /* listener={teamSynchronizationChart.animation} */
+                          />
+                        </CardHeader>
+                        <CardFooter chart>
+                          <div>
+                            Team synchronization for selected session. Time difference is in milliseconds.
+                </div>
+                        </CardFooter>
+                      </Card>
+                    </GridItem>
+                    <GridItem xs={12} sm={12}>
+                      <Card>
+                        <CardHeader color="warning">
+                          <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>List of dance moves done this session.</h4>
+                        </CardHeader>
+                        <CardBody>
+                          <h4>
+                            {
+                              sessionInfo.current.map(session => {
+                                return <ol>{session.list_of_dance_moves_done.map(dance_move => (<li>{dance_move}</li>))}</ol>
+                              })
+                            }
+                          </h4>
+                        </CardBody>
+                        <CardFooter>
+                          <div className={classes.stats}>
+                            Dance move done by the team. If more than 2 dancers are doing the same dance move, it will be considered as a dance move, else it will be unknown.
+                </div>
+                        </CardFooter>
+                      </Card>
+                    </GridItem>
+                  </CardBody>
+                </Card>
+              </GridItem>
+
 
 
 
@@ -315,6 +530,8 @@ export default function Team({ team }) {
                   </CardFooter>
                 </Card>
               </GridItem> */}
+
+
             </GridContainer>
 
             {/* LIST OF DANCE MOVES DONE */}

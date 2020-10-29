@@ -15,7 +15,7 @@ var delays2 = 80,
 // // // Current Session Statistics
 // #############################
 
-const currentSessionChart = {
+const averageDelayChart = {
   data: { // UNUSED
     labels: ["M", "T", "W", "T", "F", "S", "S", "lul"],
     series: [[50, 50, 7, 17, 23, 18, 38, 40]]
@@ -24,8 +24,8 @@ const currentSessionChart = {
     lineSmooth: Chartist.Interpolation.cardinal({
       tension: 0
     }),
-    low: 0,
-    high: 100, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+    low: 500,
+    high: 5000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
     chartPadding: {
       top: 0,
       right: 0,
@@ -75,7 +75,7 @@ const teamSynchronizationChart = {
       tension: 0
     }),
     low: 0,
-    high: 2000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+    high: 5000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
     chartPadding: {
       top: 0,
       right: 0,
@@ -234,7 +234,7 @@ const completedTasksChart = {
 };
 
 module.exports = {
-  currentSessionChart,
+  averageDelayChart,
   teamSynchronizationChart,
   emailsSubscriptionChart,
   completedTasksChart

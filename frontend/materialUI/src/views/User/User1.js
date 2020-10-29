@@ -120,6 +120,54 @@ export default function User1({ team }) {
       <div>
         <GridContainer>
 
+          <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              {/* <CardHeader color="warning">
+                <h2 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Dancer 1</h2>
+                
+              </CardHeader> */}
+              <CardBody>
+
+                <GridItem xs={12} sm={12} md={12}>
+                  <Card>
+                    <CardHeader color="primary">
+                      <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Current Dance Move</h4>
+                    </CardHeader>
+                    <CardBody>
+                    <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].current_dance_move}</h3>
+                    </CardBody>
+                  </Card>
+                </GridItem>
+
+                <GridItem xs={12} sm={12} md={12}>
+                  <Card>
+                    <CardHeader color="warning">
+                      <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Your Current Position</h4>
+                    </CardHeader>
+                    <CardBody>
+                    <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].current_position}</h3>
+                    </CardBody>
+                  </Card>
+                </GridItem>
+
+                <GridItem xs={12} sm={12} md={12}>
+                  <Card>
+                    <CardHeader color="info">
+                      <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Your time lagged after first dancer (in ms)</h4>
+                    </CardHeader>
+                    <CardBody>
+                    <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].time_started}</h3>
+                    </CardBody>
+                  </Card>
+                </GridItem>
+
+
+              </CardBody>
+            </Card>
+          </GridItem>
+
+
+
           <GridItem xs={12} sm={6} /* md={3} */>
             <Card>
               <CardHeader color="warning" /* stats */ icon>
@@ -279,7 +327,7 @@ export default function User1({ team }) {
               </GridItem>
 
               {/* PAST SESSIONS GRAPH */}
-             {/*  <GridItem xs={12} sm={12} md={12}>
+              {/*  <GridItem xs={12} sm={12} md={12}>
                 <Card chart>
                   <CardHeader color="warning">
                     <ChartistGraph

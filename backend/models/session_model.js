@@ -8,9 +8,13 @@ const sessionSubSchema = new SubSchema({
         required: true,
         min: 0,
         default: 0
-    }, 
+    },
     list_of_dance_moves_done: {
         type: [String],
+        default: []
+    },
+    timing_difference_graph: {
+        type: [],
         default: []
     },
     /* user_individual_overall_grade: {

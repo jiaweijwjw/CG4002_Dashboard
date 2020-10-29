@@ -65,6 +65,10 @@ class Server(threading.Thread):
                 try:
                     msg = data.decode("utf8")
                     decrypted_message = self.decrypt_message(msg)
+                    positions = decrypted_message['position'].split(' ')
+
+                    pos1, pos2, pos3 = positions[:3]
+
                     #INSERT YOUR CODE HERE
 
                     #TODO UPDATE TO DATABASE
@@ -79,20 +83,20 @@ class Server(threading.Thread):
                         {
                             "username": "dancer1",
                             "current_dance_move": decrypted_message['action'],
-                            "current_position": 1,
-                            "time_started": 0
+                            "current_position": pos1,
+                            "time_started": decrypted_message['sync']
                         },
                         {
                             "username": "dancer2",
                             "current_dance_move": decrypted_message['action'],
-                            "current_position": 2,
-                            "time_started": 0
+                            "current_position": pos2,
+                            "time_started": decrypted_message['sync']
                         },
                         {
                             "username": "dancer3",
                             "current_dance_move": decrypted_message['action'],
-                            "current_position": 3,
-                            "time_started": 0
+                            "current_position": pos3,
+                            "time_started": decrypted_message['sync']
                         }
                     ]
                     response = requests.post(url, json=payload, headers=headers)

@@ -30,10 +30,14 @@ const teamSchema = new Schema({
     type: [],
     default: []
   },
-  sessions: [{ type: Schema.Types.ObjectId, ref: 'sessionSubSchema' }],
+  sessions: [{ type: Schema.Types.ObjectId, ref: 'sessionSubSchema' }], // unused
   current_session_number: {
     type: Number,
-    default: 0
+    default: 1
+  },
+  averageDelayGraph: {
+    type: [],
+    default: []
   }
 });
 
