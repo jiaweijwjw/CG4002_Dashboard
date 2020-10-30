@@ -75,8 +75,8 @@ export default function Team({ team }) {
   const [sessionNumber, setSessionNumber] = React.useState('');
   const [sessionChanged, setSessionChanged] = useState([]);
 
-  const sessionInfo = useRef([]);
-  const simplifiedSession = useRef();
+  const sessionInfo = useRef(); // useRef([])
+  const simplifiedSession = useRef(); // simplified session is an object, while sessionInfo is the array with object in it. extracted in useLayoutEffect.
 
   const handleChange = event => {
     setSessionNumber(event.target.value);
@@ -107,7 +107,7 @@ export default function Team({ team }) {
 
   useLayoutEffect(() => { // whats the difference from useEffect again?
     sessionInfo.current = sessionChanged;
-    simplifiedSession.current = sessionInfo.current[0];
+     simplifiedSession.current = sessionInfo.current[0];
   }, [sessionChanged]); // depends on whether sessionChanged is mutated
 
   const keyPress = async (e) => {
@@ -198,6 +198,7 @@ export default function Team({ team }) {
     return teamSynchronizationStats.data;
   };
 
+
   const renderHistoryView = (team) => {
     if (switchView.checkedB) {
       return (
@@ -239,7 +240,7 @@ export default function Team({ team }) {
 
               </GridItem>
               <p>
-                <h4 className={classes.cardTitle} style={{ textAlignVertical: "center", textAlign: "center", }}>Average Delay for the selected session: <b>{(() => {
+                    <h4 className={classes.cardTitle} style={{ textAlignVertical: "center", textAlign: "center", }}>Average Delay for selected session : <b>{(() => {
                   if (simplifiedSession.current == null) {
                     return (0)
                   } else {
