@@ -13,7 +13,7 @@ const userSubSchema = new SubSchema({
   },
   current_dance_move: { // can be integer also.
     type: String,
-    enum: ['stationary', 'zigzag', 'pushback', 'hair', 'rocket', 'elbowlock', 'scarecrow', 'window', 'shouldershrug'],
+    enum: ['stationary', 'zigzag', 'pushback', 'hair', 'rocket', 'elbowlock', 'scarecrow', 'windowwipe', 'shouldershrug', 'logout'],
     required: true,
     default: 'stationary'
   },

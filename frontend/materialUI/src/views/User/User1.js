@@ -134,7 +134,7 @@ export default function User1({ team }) {
                       <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Current Dance Move</h4>
                     </CardHeader>
                     <CardBody>
-                    <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].current_dance_move}</h3>
+                      <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].current_dance_move}</h3>
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -145,7 +145,19 @@ export default function User1({ team }) {
                       <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Your Current Position</h4>
                     </CardHeader>
                     <CardBody>
-                    <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].current_position}</h3>
+                      <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>
+                        {(() => {
+                          if (team.users[0].current_dance_move == 'stationary') {
+                            return (
+                              1
+                            )
+                          } else {
+                            return (
+                              team.users[0].current_position
+                            )
+                          }
+                        })()}
+                      </h3>
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -156,7 +168,7 @@ export default function User1({ team }) {
                       <h4 className={classes.cardTitleWhite} style={{ textAlignVertical: "center", textAlign: "center", }}>Your time lagged after first dancer (in ms)</h4>
                     </CardHeader>
                     <CardBody>
-                    <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].time_started}</h3>
+                      <h3 style={{ textAlignVertical: "center", textAlign: "center", }}>{team.users[0].time_started}</h3>
                     </CardBody>
                   </Card>
                 </GridItem>

@@ -1,7 +1,8 @@
 // dedicated file ensures we only connect this socket once.
 import clientSocket from 'socket.io-client';
 export const socket = clientSocket('http://localhost:5000'); 
-// export const socket = clientSocket('http://202.166.37.137:5000');
+// export const socket = clientSocket('http://ipaddress:5000');
+
 
 // ALWAYS CHANGE THIS WHEN IP ADDRESS CHANGE
 

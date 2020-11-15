@@ -72,7 +72,7 @@ class Server(threading.Thread):
                     #INSERT YOUR CODE HERE
 
                     #TODO UPDATE TO DATABASE
-                    url = "http://202.166.37.137:5000/main/update/B14/0"
+                    url = "http://ipaddress:5000/main/update/B14/0"
                     headers = {
                             'Content-Type': 'application/json'
                             }
